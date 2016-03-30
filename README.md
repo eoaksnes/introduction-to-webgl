@@ -1,6 +1,6 @@
 # Introduction to WebGL
 
-See slides: [http://eoaksnes.github.io/introduction-to-webgl](http://eoaksnes.github.io/introduction-to-webgl)
+See slides: [http://eoaksnes.github.io/introduction-to-webgl](http://eoaksnes.github.io/introduction-to-webgl/)
 
 ## Created by
 
