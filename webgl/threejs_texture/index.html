@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<head>
+		<script src="../../js/three.min.js"></script>
+		<title>Blue Cube</title>
+		<style>
+			body {
+				margin: 0px;
+				overflow: hidden;
+				background-color: black;
+			}
+		</style>
+		<script>
+			function loadScene() {
+				var scene = new THREE.Scene();
+				var fieldOfView = 45;
+				var aspectRatio = window.innerWidth / window.innerHeight;
+				var zNear = 0.1;
+				var zFar = 10000;
+				var camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, zNear, zFar);
+				camera.position.z = 100;
+				var renderer = new THREE.WebGLRenderer({antialias: true});
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				document.body.appendChild(renderer.domElement);
+				
+				var chromeTexture = THREE.ImageUtils.loadTexture("../../images/chrome.png");
+				var catTexture = THREE.ImageUtils.loadTexture("../../images/cat1.jpg");
+				
+				var materialArray = [];
+				materialArray.push(new THREE.MeshLambertMaterial({map: catTexture}));
+				materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
+				materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
+				materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
+				materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
+				materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
+				var cubeGeometry = new THREE.CubeGeometry(50, 50, 50, 1, 1, 1);
+				var cubeMesh = new THREE.Mesh(cubeGeometry, new THREE.MeshFaceMaterial(materialArray));
+				scene.add(cubeMesh);
+
+				var light = new THREE.SpotLight();
+      			light.position.set(170, 330, -160);
+      			scene.add(light);
+				
+				var light = new THREE.AmbientLight(0x404040); 
+				scene.add(light);
+				
+				function animate(t) {
+			        // spin the camera in a circle
+			        camera.position.x = Math.sin(t/1000)*150;
+			        camera.position.y = 50;
+			        camera.position.z = Math.cos(t/1000)*150;
+			        // you need to update lookAt every frame
+			        camera.lookAt(scene.position);
+			        // renderer automatically clears unless autoClear = false
+			        renderer.render(scene, camera);
+			        window.requestAnimationFrame(animate, renderer.domElement);
+			      };
+			      animate(new Date().getTime());
+				}
+		</script>
+	</head>
+	<body onLoad="loadScene();"></body>
+</html>

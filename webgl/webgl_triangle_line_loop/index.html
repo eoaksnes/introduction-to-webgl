@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script id="vertex" type="x-shader">
+            attribute vec2 position;
+            
+            void main() {
+                gl_Position = vec4(position, 0, 1);
+            }
+        </script> 
+
+        <script id="fragment" type="x-shader">
+            precision mediump float;
+
+            void main() {
+                gl_FragColor = vec4(0, 0.8, 0, 1);
+            }
+        </script>
+        
+        <script>
+
+            
+            /*  2
+               /\
+              /. \
+            0/____\1
+            */
+
+            /* (0.0, 0.5)
+                  /\
+                 /  \
+                /____\ 
+    (-0.5, -0.5)      (0.5, -0.5)
+            */
+
+            function createBuffer(gl) {
+                var vertexPositionBuffer = gl.createBuffer();
+                // Make the VBO active
+                gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
+                //Create triangle vertices
+                var vertices = [
+                -0.5, -0.5, 
+                 0.5, -0.5, 
+                 0, 0.5
+                ];
+                // Upload vertex data to the GPU memory
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+            }
+
+
+            // Create and compile shader
+            function createShader(gl, str, type) {
+                var shader = gl.createShader(type);
+                gl.shaderSource(shader, str);
+                gl.compileShader(shader);
+                return shader;
+            }
+
+            function createShaderProgram(gl, vertexShader, fragmentShader) {
+                var shaderProgram = gl.createProgram();
+                // A program consists of a vertex and fragment shader
+                gl.attachShader(shaderProgram, vertexShader);
+                gl.attachShader(shaderProgram, fragmentShader);
+                gl.linkProgram(shaderProgram);
+                // Set the specified program as the currently active program
+                gl.useProgram(shaderProgram);
+                return shaderProgram;
+            }
+
+            function configureVertexShaderInput(gl, shaderProgram) {
+                shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, 'position');
+                gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+                gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, 2, gl.FLOAT, false, 0, 0);
+                // The number 2 to specify that we have two values per vertex (x,y), and gl.FLOAT to specify that the data is floating point type. The two zeros at the end respectively signify that the positions are tightly packed (no gap in the data) and that we should start drawing from position zero in the buffer.
+            }
+
+            function drawTriangle(gl) {
+                gl.clearColor(0, 0, 0.5, 1);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+                // Draw our awesome triangle
+                gl.drawArrays(gl.LINE_LOOP, 0, 3);    
+            }
+
+            function initWebGL() {
+                var canvas = document.getElementById('webglCanvas');
+                var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+                createBuffer(gl);
+                var vertexShader = createShader(gl, document.getElementById("vertex").innerHTML, gl.VERTEX_SHADER);
+                var fragmentShader = createShader(gl, document.getElementById("fragment").innerHTML, gl.FRAGMENT_SHADER);
+                var shaderProgram = createShaderProgram(gl, vertexShader, fragmentShader);
+                configureVertexShaderInput(gl, shaderProgram)
+                drawTriangle(gl);
+            }
+        </script>
+</head>
+  <body onload="initWebGL();">
+    <canvas id="webglCanvas" width="400" height="400"></canvas>
+  </body>
+</html>

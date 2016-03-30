@@ -1,0 +1,1706 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Introduction to WebGL</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+<aside class="notes">
+Velkommen til denne introduksjonstalken om WebGL. Me (Thomas og Eirik) og me e konsulenta i Bouvet, som dåkke ser.
+
+Grunnen til at me valgte å snakka om WebGL idag er todelt;
+1. me var så heldig å jobbe med ein WebGL applikasjon (og andre kule teknologier) på et prosjekt hos ein kunde og
+2. Da e kult.
+
+Før me fortsette her, så kunne eg tenkt meg å sjå kor mange av dåke som har
+1. Hørt om WebGL
+2. Jobba med WebGL
+
+- Ok, då håpe eg at dåkke blir (enda meir) trigga te å testa og hacke med WebGL etter denne talken her.
+
+Da eg syns e litt spesielt e at WebGL ikkje er hypa like mykje som mange andre nye teknologier for web, som f.eks. LocalStorage, WebThreads, WebSockets, WebRTC osv. Det kan jo hende at det har noe med at det har blitt forsøkt med 3D på webben omtrent siden den spede begynnelsen. (VRML 1995/1997), uten aldri å ha slått særlig an (trur eg). 3D er jo kult. Eller, det var kult i hvert fall. Og det som ein ofte kjennetegner med 3D og grafikk på webben før WebGL er jo noe sånt som dette:
+</aside>
+
+					<img src="images/webgl.png" style="border:0px; size:80%;"/>
+					<h1 style="color: #FFF";>An Introduction</h1>
+					<p style="color: #EEE">24.09.2015</p>
+					<p>Eirik Ola Aksnes&nbsp;|&nbsp;Thomas Johansen</p>
+
+				</section>
+
+				<section data-background-iframe="webgl/intro/index.html">
+<aside class="notes">
+No er jo dette WebGL i en browser, men ikkje nåkke meir magisk enn "bevegelig WordArt". Og så tar den opp hele browservinduet.
+</aside>
+				</section>
+
+				<section>
+					<h1>Agenda</h1>
+					<ul>
+						<li>3D on the Web</li>
+						<li>Hello Canvas (2D)</li>
+						<li>Hello WebGL (3D)</li>
+						<li>WebGL Basics</li>
+						<li>Draw Something Meaningful</li>
+						<li>Three.js to the rescue!</li>
+						<li>Great Examples</li>
+						<li>References</li>
+					</ul>
+				</section>
+
+				<section>
+					<section>
+					<aside class="notes">
+					og det introduserer oss for 3D på webben.
+					</aside>
+						<h1>3D on the Web</h1>
+					</section>
+
+					<section>
+					<aside class="notes">
+					Obligatorisk xkcd
+					</aside>
+						<img src="images/headache.png"/>
+					</section>
+
+					<section>
+
+						<h2>BEFORE (PLUG-INS)</h2>
+						<aside class="notes">
+Tidligere (og litt fortsatt) så finnes det nesten et uttall teknologier som gir oss muligheten til 3D og grafikk i en web browser, MEN
+1. De har alle behov for plug-ins
+2. Integrasjonen med websida er så som så (fra fraværende til delvis mulig).
+
+Ingen av disse har vel slått nok til at de blir værende tilgjengelig så mye lenger (i sin original innpakning). Det er vel dette som er grunnen til at 3D på webben har fått et dårlig rykte. Mye "bells and whistles", men lite sluttprodukt/resultat/utbytte, i hvert fall slik det ofte har blitt brukt.
+
+Det som er litt interessant med et par av teknologiene her (O3D, X3DOM og VRML) er at de er gått over til å bruke WebGL til å rendre 3D grafikken som default.
+						</aside>
+						<ul>
+							<li>Adobe Flash, MS Silverlight</li>
+							<li>Java OpenGL, JOGL, Java 3D</li>
+							<li>O3D</li>
+							<li>VRML, X3D/X3DOM</li>
+						</ul>
+					</section>
+
+					<section>
+<aside class="notes">
+Mens det har vært litt kamp på webben om 3D og grafikk, så har (2D/3D APIet OpenGL) OpenGL utvikla seg i det stille siden 1992. Fra å være rigid og fastlåst til å bli mye mer dynamisk, med hovedvekt på programmerbar pipeline (dynamisk prosessering av piksler, med "vertex shader" (posisjonskalkulator) og "fragment shader" (fargevelger) for prosessering av piksler. Dette kommer vi mye nærmere innpå senere i talken. Fra dette så ble det også utviklet en OpenGL ES standard for mobile enheter med mindre maskinkraft/ytelse, et subset av OpenGL. WebGL 1.0 er basert på OpenGL ES 2.0 standarden, og det er den vi skal snakke om i dag.
+
+Det som er også viktig å merke seg er jo at APIen vanligvis (det er en wrapper som også kan brukes for programvareakselrering på CPUen...) interagerer med GPUen for å få maskinvareakselrasjon rendering av 3D (og ikke programvareakselrering som man sier om man bruker CPUen til det samme. Som kjent er GPUen mye mer anvendelig for grafikk og flyttallsoperasjoner enn CPUen.
+
+OpenGL 2.0: Som dere ser tok det lang tid fra versjon 1.0 til neste store versjon 2.0. Hovednyheten var muligheten for programmereren å erstatte den faste og uskiftbare vertex/fragment pipelinen med "shadere".
+</aside>
+
+						<h2>OpenGL</h2>
+						<ul style="font-size: 80%">
+							<li>1992 - OpenGL 1.0</li>
+							<ul>
+								<li>Direct-mode rendering</li>
+								<li>Fixed pipeline</li>
+							</ul>
+							<li>2004 - OpenGL 2.0</li>
+							<ul>
+								<li>Programmable pipeline: vertex (position calculator) and fragment (color chooser) shading stages of the pipeline</li>
+								<li>OpenGL Shading Language</li>
+							</ul>
+							<li style="color:red">2007 - OpenGL ES 2.0</li>
+							<ul>
+								<li>Designed for mobile phones, embedded devices and video game systems</li>
+							</ul>
+							<li>2010 - OpenGL 4.0</li>
+							<li style="color:red">2011 - WebGL 1.0</li>
+							<li>2012 - OpenGL ES 3.0</li>
+							<li>2014 - OpenGL 4.5</li>
+							<li>201? - WebGL 2.0</li>
+						</ul>
+					</section>
+					<section>
+						<h2>NOW</h2>
+					<aside class="notes">
+Så det som har skjedd er at vi i prinsippet har kombinert OpenGL ES 2.0 med JavaScript og HTML 5 canvas elementet for å få WebGL. Og det er kult.
+
+Men det som hovedsaklig skiller seg ut er jo direkte støtte i nettleseren, med toveis tilgang til JavaScript og DOMen, som en hvilket som helst annen HTML-komponent (del av HTMLen). Og kan derfor manipuleres, - og manipulere HTMLen (DOMen) fra JavaScript.
+						</aside>
+						<div>OpenGL ES 2.0 + JavaScript + HTML5 canvas</div>
+						<div>=</div>
+						<h3>WebGL</h3>
+						<div>(+ data)</div>
+					</section>
+
+					<section>
+					<aside class="notes">
+WebGL krever INGEN plug-ins, det kjører direkte i browseren. Det er lett å komme i gang, ingen installasjoner kreves og man kan skrive koden i VIM og Emacs. JavaScript APIen finnes altså i browseren, og man skriver HTML og JavaScript. WebGL elementet(ene) blir rett og slett en del av websiden, og ikke som en ekstern applikasjon. Den er sømløst integrert/en del av koden, på samme måte som LocalStorage, WebSockets og 2D canvas, som gjør at man kan bruke WebGL der man ser at det er mest logisk å bruke det; isf. f.eks. statisk bilde, vise statistikk eller data visuelt eller at man kanskje trenger ytelsen til GPUen for en gitt type beregninger (WebCL). Ein har direkte tilgang til GPUen (ytelse og lavnivå) som gir oss enorme muligheter, men det finnes også et godt utvalg av høynivå biblioteker for å effektivt bruke teknologien.
+
+Det er selvsagt også noen potensielle ulemper. Med JavaScript så får vi ikke like høy ytelse som vi kunne hatt, f.eks. pga. tid til å parse data og flytte data over på GPUen for prosessering. Ulik Hardware har også tilsvarende effekt, ved at noe som fungerer utmerket på en desktop PC ikke kjører, eller hakker mye en mobiltelefon. Dette er logisk, men kanskje noe man glemmer av mtp. portabiliteten. Sist, så har det også vært litt sikkerhetsbekymringer, men kritikerne (Microsoft og Apple) ser ut til å ha stilnet nå, ettersom de begge har implementert WebGL i sine respektive browsere.
+
+Helt til slutt, hvilke browsere støttes da?
+
+asm.js. Og, når koden er shippa til GPUen så kjører vi jo på nativ hastighet, det er logikken mellom stegene som er javascript-hastighet...javascript er mer eller mindre ikke i stand til å få GPUen til å kjøre 100%, fordi den ikke klarer å sende/prosessere data raskt nok.
+Hva skjer f.eks. om du overgår videominnet? Det er implementasjonsavhengig, og kan variere fra plattform til plattform. På samme måte som at videominnet varierer mye...her handler det selvsagt å kunne teste på mange forksjellige plattformer. Og forressten, du kan IKKE finne ut hvor mye minne du har til rådighet, det er en sikkerhetsissue....så det blir jo krasj da..evnt. at operativsystemet flytter videominne til RAM...som gjør at det blir sirup...
+
+WebGL har extensions fra OpenGL, som gjør at "nye" features kan være tilgjengelig i "gamle" APIer, men dette varierer fra enhet til enhet. Selvom det kan være fristende, eller lett å glemme, bør man passe på å ikke bruke noe som ikke er støttet av en enhet som skal være støttet... Å ha denne muligheten å bruke features før de er spikra i neste versjon kan jo selvsagt også være fint...
+
+Forskjellige plattformer, med forskjellige underliggende APIer (Direct3D) etc. yter forskjellig, spesielt når spennet av hardware skal være såpass stort; PCer til mobiler. Det er i så tilfelle viktig å lage noe som fungerer bra "overalt". Dette har med portabilitet å gjøre...som ofte er en av grunnene til å velge WebGL...
+
+Du kan manipulere DOMen fra WebGL scripts, og du kan interaktivt manipulere grafikken vha. JavaScript.
+
+Det som gjør det så spennende med WebGL er at det blir mulig og mye enklere å lage nye brukergrensesnitt som inntil nå har vært umulig uten eksterne plug-ins og tredjeparts programvare. Skillet mellom desktop-applikasjoner og webapplikasjoner viskes enda mer ut, og man får "gratis" portabilitet mellom mange plattformer man ikke trenger ta hensyn til som utvikler.
+					</aside>
+					<h1>YAY!</h1>
+					<ul style="list-style-type:none;">
+						<li class="fragment">+ NO Plugins!</li>
+						<li class="fragment">+ Easy to use</li>
+						<li class="fragment">+ Integrates nicely in website</li>
+						<li class="fragment">+ Two-way interaction</li>
+						<li class="fragment">+ GPU access</li>
+						<li class="fragment">+ Low-level API</li>
+						<li class="fragment">+ High-level Libraries</li>
+						<li class="fragment">+ Browser support</li>
+						<li class="fragment">- Performance limitations (JS)</li>
+						<li class="fragment">- HW limitations</li>
+						<li class="fragment">- Security conserns</li>
+					</ul>
+</section>
+					<section>
+					<aside class="notes">
+					Maaaaange. De aller fleste av de som brukes, dvs 80% av brukermassen på web har hel eller delvis støtte for WebGL 1.0. Det er mao. ingen grunn til å holde tilbake.
+					</aside>
+						<h2>Supported browsers*</h2>
+						<ul style="font-size: 80%">
+							<li>Desktop - Opera > 12</li>
+							<li>Desktop - Chrome > 9</li>
+							<li>Desktop - Firefox > 4</li>
+							<li>Desktop - Safari > 5.1</li>
+							<li>Desktop - Internet Explorer >= 11 (Partially)</li>
+							<li>Desktop - Edge</li>
+							<li>Mobile - Firefox > 4</li>
+							<li>Mobile - Chrome > 25</li>
+							<li>Mobile - Opera > 12</li>
+							<li>Mobile - iOS > 8</li>
+							<li>Mobile - IE > 8.1</li>
+							<li>Mobile Others : Maemo, Sailfish, Tizen, Ubuntu Touch, WebOS...</li>
+							<li>~80% of web users</li>
+						</ul>
+						<p style="font-size: 0.5em; text-align: right;" ><a href="http://caniuse.com/#feat=webgl">*As of 01.09.2015</a></p>
+					</section>
+</section>
+				<section>
+					<section>
+					<aside class="notes">
+Då e det tid for hands-on. Først ut så ser vi på Canvas-elementet.
+					</aside>
+						<h1>Hello Canvas (2D)</h1>
+					</section>
+
+					<section>
+						<aside class="notes">
+						Dette elementet har eksistert i lang tid (2004/2005) og benyttes til å manipulere/rendre en bitmap. Dvs. hele canvasen består av piksler som vi kan endre på. Her er lerretet uten noen form for behandling, men med sort bakgrunn.
+						</aside>
+						<h2>1. Create a canvas element</h2>
+						<pre><code contenteditable>
+&lt;canvas id="myCanvas" width="400" height="400" style="background-color: black;"&gt;
+  Your browser doesn't appear to support the HTML5 &lt;canvas&gt; element.
+&lt;/canvas&gt;
+						</code></pre>
+						<canvas id="myCanvas" width="400" height="400" style="background-color: black;">
+							Your browser doesn't appear to support the HTML5 <code>&lt;canvas&gt;</code> element.
+						</canvas>
+					</section>
+
+					<section>
+						<aside class="notes">
+						For å manipulere/endre på lerreret må vi først hente konteksten/handleren for 2D manipulering.
+						</aside>
+						<h2>2. Obtain a drawing context</h2>
+						<p>
+						<pre><code contenteditable>
+var canvas = document.getElementById("myCanvas");
+var drawingContext = canvas.getContext("2d");
+						</code></pre>
+						</p>
+					</section>
+
+					<section>
+					<aside class="notes">
+							Som i Java og mange andre språk så kan vi bruke primitive instruksjoner som flytt, tegnlinje, velge malerkost for å tegne i ett "koordinatsystem".
+						</aside>
+						<h2>3. Draw something</h2>
+
+						<pre><code class="javascript">
+drawingContext.strokeStyle = "#0000FF";
+drawingContext.fillStyle = "#00FF00";
+drawingContext.lineWidth = 4;
+
+drawingContext.beginPath();
+
+drawingContext.moveTo(250,0);
+drawingContext.lineTo(500,500);
+drawingContext.lineTo(0,500);
+drawingContext.lineTo(250,0);
+
+drawingContext.fill();
+drawingContext.stroke();
+drawingContext.closePath();
+						</code></pre>
+
+					</section>
+
+					<section>
+						<aside class="notes">
+Resultatet blir f.eks. dette. Og så over til en ekstra dimensjon.
+						</aside>
+						<h2>3. The result</h2>
+						<div>
+							<canvas id="myRectangle" width="500" height="500" style="background-color: black;text-align:center">
+								Your browser doesn't appear to support the HTML5 <code>&lt;canvas&gt;</code> element.
+							</canvas>
+						</div>
+	<script type="text/javascript">
+		var canvas = document.getElementById("myRectangle");
+		if (canvas.getContext) {
+		var drawingContext = canvas.getContext("2d");
+
+		drawingContext.strokeStyle = "#0000FF";
+		drawingContext.fillStyle = "#00FF00";
+		drawingContext.lineWidth = 4;
+
+		drawingContext.beginPath();
+
+		drawingContext.moveTo(250,0);
+		drawingContext.lineTo(500,500);
+		drawingContext.lineTo(0,500);
+		drawingContext.lineTo(250,0);
+
+		drawingContext.fill();
+		drawingContext.stroke();
+		drawingContext.closePath();
+
+		// 3D effect :p
+		drawingContext.strokeStyle = "#5555FF";
+		drawingContext.fillStyle = "#22AA22";
+		drawingContext.lineWidth = 4;
+
+		drawingContext.beginPath();
+
+		drawingContext.moveTo(250,0);
+		drawingContext.lineTo(480,430);
+		drawingContext.lineTo(500,500);
+		drawingContext.lineTo(250,0);
+
+		drawingContext.fill();
+		drawingContext.stroke();
+		drawingContext.closePath();
+
+		}
+	</script>
+						<iframe width="550" height="550"></iframe>
+					</section>
+				</section>
+
+				<section>
+
+					<section>
+						<h1>
+							Hello WebGL (3D)
+						</h1>
+						<aside class="notes">
+							<ul>
+								<li>
+									I de to neste to seksjonene vil jeg si noe om;
+									<ul>
+										<li>
+											Hvordan WebGL fungerer
+										</li>
+										<li>
+											Hva som trengs for å lage WebGL applikasjoner
+										</li>
+									</ul>
+								</li>
+								<li>
+									Tenkte å starte å introdusere WebGL med et veldig enkelt eksempel
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>Draw a blue background</h2>
+						<p><iframe data-src="webgl/webgl_background/blue.html" width="350" height="350"></iframe></p>
+						<ul>
+							<li>
+								As simple as it gets (with raw WebGL)
+							</li>
+						</ul>
+						<aside class="notes">
+							<ul>
+								<li>
+									Så enkelt som det kan bli
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>1. Create a canvas element</h2>
+						<pre><code contenteditable>
+&lt;html&gt;
+  &lt;head&gt;          
+    &lt;script type="text/javascript"&gt;
+      function draw() {
+        ...
+      }
+    &lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body onload="draw()"&gt;
+    &lt;canvas id="canvas" width="500" height="500"&gt;&lt;/canvas&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>2. Obtain a WebGL context</h2>
+						<pre><code contenteditable>
+&lt;html&gt;
+  &lt;head&gt;          
+    &lt;script type="text/javascript"&gt;
+      function draw() {
+        var canvas = document.getElementById('canvas');
+        var gl = canvas.getContext("webgl");
+        ...
+      }
+    &lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body onload="draw()"&gt;
+    &lt;canvas id="canvas" width="500" height="500"&gt;&lt;/canvas&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+						</code></pre>
+						<ul>
+							<li>
+								Get a reference to the canvas element
+							</li>
+							<li>
+								Obtain a WebGL context
+								<ul>
+									<li>
+										Through <i>gl</i> (JavaScript object) we can access all WebGL functionality
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>3. Set background color</h2>
+						<pre><code contenteditable>
+&lt;html&gt;
+  &lt;head&gt;          
+    &lt;script type="text/javascript"&gt;
+      function draw() {
+        var canvas = document.getElementById('canvas');
+        var gl = canvas.getContext("webgl");
+        gl.clearColor(0, 0, 0.5, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT); // Call the clear function to set the color
+      }
+    &lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body onload="draw()"&gt;
+    &lt;canvas id="canvas" width="500" height="500"&gt;&lt;/canvas&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+						</code></pre>
+						<aside class="notes">
+							<ul>
+								<li>
+									Det er enkelt og raskt å komme i gang med WebGL:
+									<ul>
+										<li>
+											Ingen installasjon
+										</li>
+										<li>
+											Ingen byggeskript (makefiles, scons), som du har med C++ applikasjoner og OpenGL
+										</li>
+										<li>
+											Nettleseren gjør arbeidet for deg
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<!--<section>
+						<h2>WebGL Is A State Machine</h2>
+						<ul>
+							<li>
+								 Commands are permanent and will continue to take effect until they are overridden
+							</li>
+							<li>
+								Therefore it will maintain the selected color to clear the canvas up to when this color is changed using the WebGL function gl.clearColor
+							</li>
+						</ul>
+					</section>-->
+				</section>
+
+				<section>
+					<section>
+						<h2>WebGL Basics</h2>
+					</section>
+
+					<section>
+						<h2>
+							Low Level API
+						</h2>
+						<ul>
+							<li>
+								WebGL is designed
+								<ul>
+									<li>
+										To work directly with your GPU
+									</li>
+									<li>
+										So that you can build higher level libraries upon it
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<aside class="notes">
+							<ul>
+								<li>
+									Siden WebGL er et lav nivå API;
+									<ul>
+										<li>Så må man gjøre mye selv</li>
+										<li>Man får forholdsvis lite hjelp av WebGL APIet</li>
+										<li>F.eks så har man ikke en funksjon som heter "tegn trekant"</li>
+									</ul>
+								</li>
+								<li>
+									Vi har desverre ikke tid til å gå inpå alle detaljene <!--rundt 3D grafikk og WebGL i denne seksjonen-->, men håper gi nok informasjon til at dere får en slags ide om hvordan WebGL fungerer
+								</li>
+								<li>
+									Det blir litt teori først nå, før vi vil vise noe kode
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>
+							Already know WebGL?
+						</h2>
+						<ul>
+							<li>
+								If you know OpenGL, you may already know WebGL
+								<ul>
+									<li>
+										WebGL is quite different from OpenGL <= 3.0 and OpenGL ES 1.x
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<aside class="notes">
+							<ul>
+								<li>
+									Eldre OpenGL funksjonalitet er droppet i WebGL:
+									<ul>
+										<li>Ting som ikke er effektivt</li>
+										<li>Man må bruke shadere</li>
+										<li>Removes seldom-used or legacy features</li>
+									</ul>
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>We have to use shaders</h2>
+						<ul>
+							<li>
+								OpenGL ES 1.0 uses a fixed function pipeline
+								<ul>
+									<li>
+										Built-in functions to set lights, fog, colors, vertices, cameras, and more
+									</li>
+									<li>
+										Easy to use
+									</li>
+								</ul>
+							</li>
+							<li>
+								OpenGL ES 2.0 (and WebGL) uses a programmable pipeline
+								<ul>
+									<li>
+										Built-in functions are removed and replaced by programmable shaders
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<aside class="notes">
+							<ul>
+								<li>
+									Jeg har tenkt å si noen få ord om forskjellen mellom en "fixed function" og programmerbar pipeline
+								</li>
+								<li>
+									I den "fixed function pipeline" har du ferdige funksjoner for å aktivere lys, tåke, kamera
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>
+							Graphical Pipeline
+						</h2>
+						<p>
+							<img class="blackBackground" src="images/webgl-workflow-2_2.png">
+						</p>
+						<aside class="notes">
+						</aside>
+					</section>
+
+					<section>
+						<h2>
+							Programmable pipeline
+						</h2>
+						<p>
+							<img class="blackBackground" src="images/webgl-workflow-3_3.png">
+						</p>
+						<aside class="notes">
+							<ul>
+								<li>
+									I WebGL er pipelinen programmerbar, gjennom noe som kalles shadere.
+								</li>
+								<li>
+									Så hva er en shader?
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>What Are Shaders?</h2>
+						<ul>
+							<li>Small "programs" that runs on the GPU <!--(with a high degree of parallelism)--></li>
+							<!--<li>A programmable replacement for parts of the ﬁxed function pipeline</li>-->
+							<li>Have a well-defined set of input/output values, some built-in and some user-defined</li>
+							<li>Written in OpenGL Shading Language (GLSL)</li>
+							<li>GLSL syntax is kinda like C</li>
+							<li>Generally regarded as fairly advanced, but it is actually much simpler than it looks</li>
+						</ul>
+						<aside class="notes">
+							<ul>
+								<li>
+									For de som er kjent med Nvidia CUDA kan shaders sammenlignes med Kernels,
+									men forskjellen er at Shaders har et veldefinert sett av input og output verdier,
+									siden de er en del av en pipeline
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>
+							Shader Effect Examples
+						</h2>
+						<p>
+							<iframe data-src="http://www.dasprinzip.com/pExamples/raymarcher03.htm" width="400" height="400"></iframe>
+							<iframe data-src="http://www.dasprinzip.com/pExamples/raymarcher01.htm" width="400" height="400"></iframe>
+						</p>
+						<ul>
+							<li>
+								Shaders can be used to create cool effects like lightning, shadowing, refraction, and more
+							</li>
+						</ul>
+						<p>
+							<a class="reference" href="http://www.dasprinzip.com/prinzipiell/2011/02/21/raymarching/">Reference</a>
+						</p>
+						<aside class="notes">
+							<li>
+								Med shadere kan implementere egne metoder/algoritmer for å oppnå ønskede effekter (lys, skyggelegging, refleksjoner)
+							</li>
+							<!--<li>
+								Man kan lage effekter som ville vært svært vanskelig å få til ved hjelp av en "fixed function pipeline"
+							</li>-->
+							<li>
+								I disse to eksemplene er det samme datagrunnlag, men vet å anvende forskjellige shader, så får man forskjellige effekter!
+							</li>
+							<!--<li>
+								Alt av kalkuleringer blir kjørt på GPUen
+							</li>-->
+						</aside>
+					</section>
+
+					<section>
+						<h2>Shaders In WebGL</h2>
+						<ul>
+							<!--<li>Much of the pipeline, like the fixed pipeline, is outside your control</li>-->
+							<li>There are two shader types (two stages of the pipeline are programmable):
+								<ul>
+									<li>
+										A vertex shader (process vertices)
+									</li>
+									<li>
+										A fragment shader (process fragments/pixels)
+									</li>
+								</ul>
+							</li>
+							<li>You will need both shaders in order to draw anything on the screen</li>
+							<li>For standard usage these shaders are quite simple</li>
+							<li>No default shaders</li>
+	  						<li>You need to write your own shaders or use one provided by a WebGL library (copy and paste)</li>
+						</ul>
+						<aside class="notes">
+
+						</aside>
+					</section>
+
+					<!--<section>
+						<h2>
+							We have to use Vertex Buffer Objects (VBOs)
+						</h2>
+						<ul>
+							<li>No immediate mode rendering (you cannot use glBegin and glEnd)
+								<pre><code contenteditable class="java">
+glBegin(GL_TRIANGLES);
+  glVertex2f(0.0f, 1.0f);
+  glVertex2f(0.87f, -0.5f);
+  glVertex2f(-0.87f, -0.5f);
+glEnd();
+								</code></pre>
+							</li>
+							<li>Instead must use Vertex Buffer Objects (VBOs) and
+								<ul>
+									<li>Better performance</li>
+								</ul>
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>
+							Differences To Other OpenGL Versions
+						</h2>
+						<ul>
+							<li>No built-in matrix functions:
+								<ul>
+									<li>
+										glLoadIdentity(), glTranslatef(), glRotatef(), glScalef(), glMultMatrixf(), glFrustum() and glOrtho().
+									</li>
+								</ul>
+							</li>
+							<li>Instead you must have your own matrix implementations and the matrix data to shaders</li>
+						</ul>
+					</section>-->
+
+				</section>
+
+				<section>
+					<section>
+						<h1>Draw Something Meaningful</h1>
+						<aside class="notes">
+							<ul>
+								<li>
+									<li>
+										I denne seksjone skal vi se på ett litt mer meningsfylt eksempel, vi skal tegne en trekant
+									</li>
+									<li>
+										Det er fortsatt et enkelt eksempel, men som vi skal se, så kreves det litt arbeid for å faktisk kunne tegne en trekant
+									</li>
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>Draw A Triangle</h2>
+
+						<iframe data-src="webgl/webgl_triangle/index.html" width="400" height="400"></iframe>
+
+						<ul>
+							<li>
+								Reusing the code from the previous example (blue background)
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>
+							How To Draw A Triangle?
+						</h2>
+						<p>
+							<img src="images/vertices2.png">
+						</p>
+						<ul>
+							<li>
+								The basic idea is to send a list of vertices to the GPU for drawing
+							</li>
+							<li>
+								A triangle is defined by three vertices (corner points)
+							</li>
+						</ul>
+						<aside class="notes">
+							<ul>
+								<li>
+									Det man gjør er å:
+									<li>
+										Lage en list over hjørnepunktene til trekanten
+									</li>
+									<li>
+										Disse hjørnepunktene blir så matet til GPUen
+									</li>
+									<li>
+										GPUen kjører så disse hjørnepunktene gjennom en pipeline (rørledning som det heter på norsk)
+									</li>
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>Simplified WebGL Pipeline</h2>
+						<p>
+							<img class="blackBackground" src="images/webgl-workflow.png">
+						</p>
+						<p>
+							<a class="reference" href="http://third-dimension-webgl-threejs.herokuapp.com/">Reference</a>
+						</p>
+						<aside class="notes">
+							<ul>
+								<li>Det som skjer er at;
+									<ul>
+										<li>
+											Først blir hjørnepunktene lastet opp til GPU minnet
+										</li>
+										<li>
+											Så blir hjørnepunktene kjørt gjennom en vertex shader, som har i oppgave å posisjonere ut hjørnepunktene
+										</li>
+										<li>
+											Så blir resultatet fra vertex shaderen sendt videre til en fragment shader som har i oppgave å fargelege mellom hjørnepunktene
+										</li>
+										<li>
+											Til slutt så blir det generert et bilde
+										</li>
+									</ul>
+								</li>
+								<li>
+									Nå er vi ferdig med grunnlegende teori og skal se på noe kode på hvordan vi kan tegne trekanten!
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>Create A Buffer</h2>
+						<p>
+							<ul>
+								<li>
+									That contains the three vertices (corners) of the triangle
+								</li>
+							</ul>
+						</p>
+						<pre><code contenteditable>
+function createBuffer(gl) {
+  // Create buffer
+  var vertexPositionBuffer = gl.createBuffer();
+  // Activate buffer
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
+  var triangleVertices = [
+    -0.5, -0.5,
+     0.5, -0.5,
+     0.0, 0.5
+  ];
+  // Copy vertices to buffer (on the GPU)
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triangleVertices), gl.STATIC_DRAW);
+  return vertexPositionBuffer;
+}
+						</code></pre>
+						<aside class="notes">
+							<lu>
+								<li>
+									Vi må lage oss et buffer som inneholder de tre hjørnepunktene til trekanten.
+								</li>
+								<li>
+									Det vi gjør:
+									<ul>
+										<li>
+											Lager ett nytt buffer
+										</li>
+										<li>
+										   Aktiverer bufferet
+										</li>
+										<li>
+											Lager en liste over hjørnepunktene med JavaScript
+										</li>
+										<li>
+											Til slutt så kopiere vi listen med hjørnepunkt over til det allokerte GPU minnet
+										</li>
+									</ul>
+								</li>
+								<!--<li>
+									Clipspace koordinater går alltid fra -1 til 1 uansett hvilken størrelse lerretet er
+								</li>
+								<li>
+									Buffers that contain vertex data are known as Vertex Buffer Objects (VBOs)
+								</li>
+								<li>
+									 Coordinates in WebGL are real numbers. There is a default coordinate system in which x goes from -1 at the left to 1 at the right and y goes from -1 at the bottom to 1 at the top. [The z coordinate is also limited to the range -1 to 1.] Values outside these ranges are clipped. This default coordinate system is referred to as clip coordinates.
+								</li>
+								<li>
+									Clipspace coordinates always go from -1 to +1 no matter what size your canvas is
+								</li>-->
+							</ul>
+						</aside>
+					</section>
+
+					<!--<section>
+						<h2>
+							Buffer data Is Input To Vertex Shaders
+						</h2>
+						<img src="images/webglProgrammingModel.png">
+					</section>-->
+
+					<!--<section>
+						<h2>
+							Attributes
+						</h2>
+						<ul>
+							<li>
+								The input buffer data is represented as attributes inside the vertex shader
+							</li>
+							<li>
+								Due to the fact that the vertex shader is called on each vertex, the attributes will be different every time
+							</li>
+						</ul>
+						<img src="images/vertexShaderInputAttributes.png">
+					</section>-->
+
+					<section>
+						<h2>A Simple Vertex Shader</h2>
+						<ul>
+							<li>
+								Executed 3 times, once for every vertex of the triangle
+							</li>
+							<li>
+								Its job is to set something called gl_Position, the final position of a vertex on the viewport (i.e. screen)
+							</li>
+							<!--<li>
+								Viewable area in x, y, and z are between -1 and +1 no matter what size your canvas is, everything else is clipped away
+							</li>
+							<li>
+								Actually talking about getting a 3D position (x,y,z) onto, or projected, to a 2D screen (x,y)
+							</li>-->
+						</ul>
+						<pre><code contenteditable>
+&lt;script id="vertex" type="x-shader"&gt;
+  attribute vec2 vertexPosition;
+  void main() {
+    gl_Position = vec4(vertexPosition, 0, 1); //xyzw
+  }
+&lt;/script&gt;
+						</code></pre>
+						<aside class="notes">
+							<ul>
+								<li>
+									For å få posisjonert ut disse hjørnepuntkene må man lage seg en vertex shader.
+								</li>
+								<li>
+									Dette er en veldig enkel vertex shader som har i oppgave å posisjonere ut hjørnepunktene
+								</li>
+								<li>
+									Den tar bare verdiene direkte ifra bufferet og sett det som endelig posisjon
+								</li>
+								<li>
+									gl_Position - Bygd inn variabel
+								</li>
+								<!--<li>
+									Ingen prosessering skjer her, det vil si, alle hjørnepuntene får de samme verdiene som de verdiene som er lagret i bufferet
+								</li>
+								<li>
+									type="x-shader" means browser ignores the contents of the script tag
+								</li>
+								<li>
+									The vertex shader converts 3d coordinates of your objects (or any geometry) from 3D coordinates to 2D coordinates of the screen using transformation matrices - one to convert from local to space to world space (the worldMatrix), and another one to convert from world coordinates into screen coordinates (the viewProjection matrix)
+								</li>-->
+							</ul>
+							<!--<ul>
+								<li>
+									The main purpose of the Vertex shader is to compute the screen coordinate of a vertex (where this vertex will be displayed on screen)
+								</li>
+							</ul>-->
+							<p>Vertex shaders typically:</p>
+							<ul>
+								</li>
+									Rotate, translate and scale each vertex of the 3D model to place it correctly relative to the virtual camera (which is always at the origin).
+								</li>
+								<li>
+									Perform perspective calculations.
+								</li>
+								<li>
+									Perform some of the lighting math.
+								</li>
+								<li>
+									Handle complex animation tasks.
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>A Simple Fragment Shader</h2>
+						<ul>
+							<li>
+								Executed once for every pixel covered by the triangle
+							</li>
+							<li>
+								The GPU figures out which pixels on the screen that are covered by the triangle
+							</li>
+							<!--<li>
+								Tweak your colors that appear on the screen just the way you like it
+							</li>-->
+							<li>
+								Its job is to set something called gl_FragColor, the final colour of a pixel
+							</li>
+						</ul>
+						<pre><code contenteditable>
+&lt;script id="fragment" type="x-shader"&gt;
+  void main() {
+    // Just apply the same color (rgba) to every pixel covered by the triangle
+    gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+  }
+&lt;/script&gt;
+						</code></pre>
+						<aside class="notes">
+							<ul>
+								<li>
+									For å få fargelagt trekanten må man lage seg en fragment shader.
+								</li>
+								<li>
+									 Dette er en veldig enkel "fragment shader" som vil fargelege alle pikselene grønn mellom hjørnepuntene til trekanten
+								</li>
+							</ul>
+							<!--<ul>
+								<li>
+									Executed a dozen to tens of thousands of times, depending on the canvas size
+								</li>
+							</ul>-->
+							<p>
+								Fragment shaders typically:
+							</p>
+							<ul>
+								<li>
+									Apply texture.
+								</li>
+								<li>
+									Perform lighting calculations.
+								</li>
+								<li>
+									Add in 'atmospheric' effects: fog, etc.
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>Create And Compile Shaders</h2>
+						<pre><code contenteditable>
+function createShader(str, type) {
+  var shader = gl.createShader(type);
+  gl.shaderSource(shader, str);
+  gl.compileShader(shader);
+  return shader;
+}
+var vertexShader = createShader(document.getElementById("vertex").innerHTML, gl.VERTEX_SHADER);
+var fragmentShader = createShader(document.getElementById("fragment").innerHTML, gl.FRAGMENT_SHADER);
+    					</code></pre>
+						<aside class="notes">
+						</aside>
+					</section>
+
+					<section>
+						<h2>Create A Shader Program</h2>
+						<ul>
+							<li>
+								The vertex shader and fragment shader are linked together into a shader program (or just program)
+							</li>
+						</ul>
+						<pre><code contenteditable>
+function createShaderProgram(vertexShader, fragmentShader) {
+  // A program consists of a vertex and fragment shader
+  var program = gl.createProgram();
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
+  gl.linkProgram(program);
+  // Set the specified program as the currently active program
+  gl.useProgram(program);
+  return program;
+}
+    					</code></pre>
+						<aside class="notes">
+						</aside>
+					</section>
+
+					<section>
+						<h2>Vertex Shader Attributes</h2>
+						<ul>
+							<li>
+								Attributes is input to vertex shader (not fragment shader)
+							</li>
+							<li>
+								Each vertex normally has a set of attributes associated with it
+								<ul>
+									<li>
+										Position
+									</li>
+									<li>
+										Color
+									</li>
+									<li>
+										Normal
+									</li>
+								</ul>
+							</li>
+						<ul>
+						<pre><code contenteditable>
+function vertexShaderAttributes(gl, shaderProgram, vertexPositionBuffer) {
+  // Make the vertices available to the vertex shaders
+  shaderProgram.vertexPositionAttrb = gl.getAttribLocation(shaderProgram, 'vertexPosition');
+  gl.enableVertexAttribArray(shaderProgram.vertexPositionAttrb);
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
+  gl.vertexAttribPointer(shaderProgram.vertexPositionAttrb, 2, gl.FLOAT, false, 0, 0);
+}
+    					</code></pre>
+						<aside class="notes">
+							<ul>
+								<li>
+									Vertex shaderen får altså data fra bufferet, så hva vi gjør her er å fortelle hvordan vertex shaderen skal lese data fra bufferet. F.eks at trekant hjørnepuntene skal leses som "vertexPosition"
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>Draw The Triangle</h2>
+						<pre><code class="javascript" contenteditable>
+gl.drawArrays(gl.GL_TRIANGLES, 0, 3);
+						</code></pre>
+						<ul>
+							<!--<li>
+								Draw a triangle using GL_TRIANGLES primitive, it treats each triplet of vertices as an independent triangle.
+							</li>
+							<li>
+								Primitive is important parameter since it determines how many fragments will be generated
+							</li>-->
+						</ul>
+						<!--<p>
+							<img src="images/gl-primitives.png">
+						</p>-->
+						<aside class="notes">
+							<ul>
+								<li>
+									Vi har nå alt som trengs for å tegne vår trekant
+								</li>
+								<!--<li>
+									Number of triangles = number vertices/3
+								</li>-->
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>
+							The Result
+						</h2>
+						<iframe data-src="webgl/webgl_triangle/index.html" width="350" height="350"></iframe>
+					</section>
+
+					<!--<section>
+						<h2>What are primitives?</h2>
+						<ul>
+							<li>Point (x,y,z)</li>
+							<li>Line (composed by two points)</li>
+							<li>Triangle (composed by three points)</li>
+						</ul>
+						<aside class="notes">
+						</aside>
+					</section>-->
+
+					<section>
+						<h2>The bottom line</h2>
+						<!--<pre><code class="javascript" contenteditable>
+var canvas = document.getElementById('webglCanvas');
+var gl = canvas.getContext("webgl");
+var vertexPositionBuffer = createBuffer(gl);
+var vertexShader = createShader(gl, document.getElementById("vertex").innerHTML, gl.VERTEX_SHADER);
+var fragmentShader = createShader(gl, document.getElementById("fragment").innerHTML, gl.FRAGMENT_SHADER);
+var shaderProgram = createShaderProgram(gl, vertexShader, fragmentShader);
+vertexShaderAttributes(gl, shaderProgram, vertexPositionBuffer)
+gl.clearColor(0, 0, 0.5, 1);
+gl.clear(gl.COLOR_BUFFER_BIT);
+gl.drawArrays(gl.GL_TRIANGLES, 0, 3);
+						</code></pre>-->
+						<ul>
+							<li>
+								A lot of work (low level API)
+							</li>
+							<li>
+								Any WebGL program will have similar structure
+								<ul>
+									<li>
+										Obtain a WebGL context from the canvas element
+									</li>
+									<li>
+										Upload drawing data into buffers
+									</li>
+									<li>
+										Create and compile shaders
+									</li>
+									<li>
+										Create a shader program
+									</li>
+									<li>
+										Draw
+									</li>
+								</ul>
+							</li>
+							<li>
+								Higher level libraries will be a big help!
+							</li>
+						</ul>
+
+						<aside class="notes">
+							<ul>
+								<li>
+									Som vi ser, må man gjøre en del selv. Man får forholdsvis lite hjelp av WebGL APIet
+								</li>
+								<li>
+									Dette gjør at man i mange sammenhenger velger å bruke høyerenivå APIer bygd på WebGL
+								</li>
+								<li>
+									Vi skal ta en titt på ett høyerenivå API nå i neste seksjon
+								</li>
+							</ul>
+						<aside>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h1>THREE.js TO THE RESCUE!</h1>
+						<aside class="notes">
+							<ul>
+								<li>
+									Three.js til unnsetning
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>Three.js</h2>
+						<ul>
+							<li>Easy to use (designed for dummies)</li>
+							<li>Hides the details of 3D rendring</li>
+							<li>Maintained under GitHub <a href="https://github.com/mrdoob/three.js/">https://github.com/mrdoob/three.js/</a></li>
+							<li>Lots of examples in the examples directory</li>
+						</ul>
+						<aside class="notes">
+							<ul>
+								<li>
+									Three.js skjuler mange av detaljene i 3D grafikk:
+									<ul>
+										<li>
+											Man trenger ikke vite hva en Shader er
+										</li>
+										<li>
+											Man har enkle datastrukturer å jobbe med
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>The HTML</h2>
+						<pre><code contenteditable>
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Three.js Visualization&lt;/title&gt;
+    &lt;script src="three.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+      // Your JavaScript will go here
+    &lt;/script&gt;
+  &lt;/head&gt;
+  &lt;/body&gt;&lt;body&gt;
+&lt;/html&gt;
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Need three things</h2>
+						<ol>
+							<li>Scene</li>
+							<li>Camera</li>
+							<li>Renderer</li>
+						</ol>
+						<aside class="notes">
+							<ul>
+								<li>
+									Du trenger tre ting:
+									<ul>
+										<li>
+											En renderer som har som ansvar å tegne en scene.
+										</li>
+										<li>
+											En scene, som inneholder hva man skal tegne.
+										</li>
+										<li>
+											Ett kamera, f.eks perspektiv kamera, som vil tegne ting som er mindre lengre unna.
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>1. Scene</h2>
+						<p>Contains what to draw</p>
+						<pre><code class="javascript" contenteditable>
+var scene = new THREE.Scene();
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>2. Camera</h2>
+						<p>Perspective camera</p>
+						<pre><code class="javascript" contenteditable>
+var fieldOfView = 45;
+var aspectRatio = window.innerWidth / window.innerHeight;
+var zNear = 0.1;
+var zFar = 10000;
+var camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, zNear, zFar);
+						</code></pre>
+						<aside class="notes">
+							<ul>
+								<li>
+									Ett kamera, f.eks perspektiv kamera, som vil tegne ting som er mindre lengre unna.
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>3. Renderer</h2>
+						<p>Create</p>
+						<pre><code class="javascript" contenteditable>
+var renderer = new THREE.WebGLRenderer({ clearColor: 0x0000FF });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+						</code></pre>
+						<p>Render the scene with selected camera</p>
+						<pre><code class="javascript" contenteditable>
+renderer.render(scene, camera);
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Now we can start draw things...</h2>
+					</section>
+
+					<section>
+						<h2>Triangle</h2>
+						<pre><code class="javascript" contenteditable>
+var geometry = new THREE.Geometry();
+var vertex1 = new THREE.Vector3(-0.5 ,-0.5, 0);
+var vertex2 = new THREE.Vector3(0.5, -0.5, 0);
+var vertex3 = new THREE.Vector3(0.0, 0.5, 0);
+geometry.vertices.push(vertex1);
+geometry.vertices.push(vertex2);
+geometry.vertices.push(vertex3);
+geometry.faces.push(new THREE.Face3(0, 1, 2 ));
+var material = new THREE.MeshBasicMaterial({
+  color: 0x00FF00
+});
+var triangle = new THREE.Mesh(geometry, material);
+scene.add(triangle);
+						</code></pre>
+						<aside class="notes">
+							<ul>
+								<li>
+									For å tengne en trekant med three.js så lager vi oss en mesh som består av:
+									<ul>
+										<li>Geometri - formen til et object</li>
+										<li>Material - utseende på flatene</li>
+									</ul>
+								</li>
+								<li>
+									THREE.Face3 - Her kobler man sammen de 3 hjørnepunktene til en triangle overflate
+								</li>
+								<li>
+									 0x00FF00 == Grønn trekant
+								</li>
+								<!--<li>
+									Mesh: Posisjon, rotasjon, skalering
+								</li>-->
+							</ul>
+						</aside>
+					</section>
+
+					<section data-background-iframe="webgl/threejs_triangle/index.html"></section>
+
+					<section>
+						<h2>Torus</h2>
+
+						<p>Torus</p>
+						<pre><code class="javascript" contenteditable>
+var radius = 40;
+var tube = 10;
+var radialSegments = 50;
+var tubularSegments = 50;
+var geometry = new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments);
+var material = new THREE.MeshBasicMaterial({
+  color: 0x0000FF
+});
+var torus = new THREE.Mesh(geometry, material);
+scene.add(torus);
+						</code></pre>
+						<aside class="notes">
+							<ul>
+								<li>
+									Bytte ut geometrien med en smultring. Definerer radius osv...
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+
+					<section data-background-iframe="webgl/threejs_torous/index.html"></section>
+
+					<section>
+						<h2>Spin The Camera</h2>
+						<pre><code class="javascript" contenteditable>
+function animate(time) {
+  // Spin the camera in a circle
+  camera.position.x = Math.sin(time/1000) * 150;
+  camera.position.y = 50;
+  camera.position.z = Math.cos(time/1000) * 150;
+  // You need to update lookAt every frame (0,0,0)
+  camera.lookAt(scene.position);
+  renderer.render(scene, camera);
+  window.requestAnimationFrame(animate);
+}
+animate(new Date().getTime());
+						</code></pre>
+						<p>
+							<a class="reference" href="http://fhtr.org/BasicsOfThreeJS/">Reference</a>
+						</p>
+					</section>
+
+					<section data-background-iframe="webgl/threejs_rotating/index.html"></section>
+
+					<section>
+						<h2>Color Picker</h2>
+						<p>
+							Because WebGL is programmed in JavaScript, this makes it easier to integrate WebGL applications with other JavaScript libraries such as JQuery UI and with other HTML5 technologies
+						</p>
+						<pre><code class="html">
+&lt;link rel="stylesheet" href="jquery-ui-1.10.2.custom/css/smoothness/jquery-ui-1.10.2.custom.css" /&gt;
+&lt;script src="jquery-ui-1.10.2.custom/js/jquery-1.9.1.js">&lt;/script&gt;
+&lt;script src="jquery-ui-1.10.2.custom/js/jquery-ui-1.10.2.custom.js">&lt;/script&gt;
+						</code></pre>
+						<iframe data-src="http://jqueryui.com/resources/demos/slider/colorpicker.html" width="600" height="200"></iframe>
+					</section>
+
+					<section>
+						<h2>Color Picker - HTML</h2>
+						<pre><code class="html" contenteditable>
+&lt;div id="colorPicker"&gt;
+  &lt;div id="red"&gt;&lt;/div&gt;
+  &lt;div id="green"&gt;&lt;/div&gt;
+  &lt;div id="blue"&gt;&lt;/div&gt;
+&lt;/div>
+                        </code></pre>
+					</section>
+
+					<section>
+						<h2>Color Picker - CSS</h2>
+						<pre><code class="css" contenteditable>
+#colorPicker {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+#red, #green, #blue {
+  float: left;
+  clear: left;
+  width: 300px;
+  margin: 15px;
+}
+...
+                        </code></pre>
+					</section>
+
+					<section>
+						<h2>Color Picker - Sliders</h2>
+						<pre><code class="javascript" contenteditable>
+$("#red, #green, #blue").slider({
+  orientation: "horizontal",
+  range: "min",
+  max: 255,
+  value: 127,
+  slide: setMaterialColor,
+  change: setMaterialColor
+});
+$("#red").slider("value", 0);
+$("#green").slider("value", 0);
+$("#blue").slider("value", 255);
+                        </code></pre>
+					</section>
+
+					<section>
+						<h2>Color Picker - Set material color</h2>
+						<pre><code class="javascript" contenteditable>
+function setMaterialColor() {
+  var red = $("#red").slider("value");
+  var green = $("#green").slider("value");
+  var blue = $("#blue").slider("value");
+  material.color.r = red / 255;
+  material.color.g = green / 255;
+  material.color.b = blue / 255;
+}
+                        </code></pre>
+					</section>
+
+					<section data-background-iframe="webgl/threejs_cube/index.html"></section>
+
+					<section>
+						<h2>Lightning</h2>
+						<p>
+							Spot light (green)
+						</p>
+						<pre><code class="javascript" contenteditable>
+var light = new THREE.SpotLight(0x00DD00);
+light.position.set(200, 0, 0);
+scene.add(light);
+						</code></pre>
+						<p>
+							Ambient light (red)
+						</p>
+						<pre><code class="javascript" contenteditable>
+var light = new THREE.AmbientLight(0xDD0000);
+scene.add(light);
+						</code></pre>
+						<aside class="notes">
+						<p>
+							 http://japhr.blogspot.no/2012/07/lights-and-materials-in-threejs.html
+						</p>
+						</aside>
+					</section>
+
+					<section data-background-iframe="webgl/threejs_lightning/index.html"></section>
+
+					<section>
+						<h2>Texture</h2>
+						<p>Load textures</p>
+						<pre><code class="javascript" contenteditable>
+var chromeTexture = THREE.ImageUtils.loadTexture("chrome.png");
+var catTexture = THREE.ImageUtils.loadTexture("cat.jpg");
+						</code></pre>
+						<p>Apply textures</p>
+						<pre><code class="javascript" contenteditable>
+var materialArray = [];
+materialArray.push(new THREE.MeshLambertMaterial({map: catTexture}));
+materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
+materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
+materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
+materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
+materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
+var cubeGeometry = new THREE.CubeGeometry(50, 50, 50, 1, 1, 1);
+var cubeMesh = new THREE.Mesh(cubeGeometry, new THREE.MeshFaceMaterial(materialArray));
+scene.add(cubeMesh);
+						</code></pre>
+					</section>
+
+					<section data-background-iframe="webgl/threejs_texture/index.html"></section>
+
+					<section>
+						<h2>Particles</h2>
+						<p>
+							Create 100 000 particles.
+						</p>
+						<pre><code class="javascript" contenteditable>
+var geometry = new THREE.Geometry();
+for (var i = 0; i < 100000; i ++) {
+  var vertex = new THREE.Vector3();
+  vertex.x = 2000 * Math.random() - 1000;
+  vertex.y = 2000 * Math.random() - 1000;
+  vertex.z = 2000 * Math.random() - 1000;
+  geometry.vertices.push(vertex);
+}
+material = new THREE.ParticleBasicMaterial({
+  size: 3,
+  sizeAttenuation: false,
+  transparent: true
+});
+var particles = new THREE.ParticleSystem(geometry, material);
+scene.add(particles);
+                        </code></pre>
+					</section>
+
+					<section>
+						<h2>Particles</h2>
+						<p>
+							Change colors of particles
+						</p>
+						<pre><code class="javascript" contenteditable>
+function changeColorParticles(time) {
+  var h = (360 * (1.0 + time * 0.00009) % 360 ) / 360;
+  material.color.setHSV(h, 1.0, 1.0);
+}
+                       </code></pre>
+					</section>
+
+					<section data-background-iframe="webgl/threejs_particles/index.html"></section>
+				</section>
+
+				<section>
+					<section>
+						<h1>Great Examples</h1>
+					</section>
+
+					<section>
+						<iframe data-src="http://haxiomic.github.io/GPU-Fluid-Experiments/html5/" width="800" height="600"></iframe>
+					</section>
+
+					<section>
+						<iframe data-src="http://madebyevan.com/webgl-water/" width="800" height="600"></iframe>
+					</section>
+
+					<section>
+						<iframe data-src="http://apps.playcanvas.com/will/doom3/gangnamstyle" width="800" height="600"></iframe>
+					</section>
+				</section>
+
+				<section>
+					<h2>
+						WebGL Beginner's Guide
+					</h2>
+					<img src="images/webgl_beginners_guide.jpg"">
+				</section>
+
+				<section>
+					<h2>Udacity - Online 3d graphics course!</h2>
+					<img src="images/udacity.png" width="896" height="504"></img>
+				</section>
+
+				<section>
+					<h1>References</h1>
+					<ul>
+						<li>
+							<a href="http://fhtr.org/BasicsOfThreeJS/">Basics of Three.js</a>
+						</li>
+						<li>
+							<a href="http://third-dimension-webgl-threejs.herokuapp.com/">The 3rd Dimension</a>
+						</li>
+						<li>
+							<a href="http://www.html5rocks.com/en/tutorials/three/intro/">Getting Started with Three.js</a>
+						</li>
+						<li>
+							<a href="http://www.raywenderlich.com/3664/opengl-es-2-0-for-iphone-tutorial">OpenGL ES 2.0 for iPhone Tutorial</a>
+						</li>
+						<li>
+							<a href="http://dev.opera.com/articles/view/an-introduction-to-webgl/">An introduction to WebGL</a>
+						</li>
+						<li>
+							<a href="http://codeflow.org/entries/2013/feb/22/how-to-write-portable-webgl/#why-portable">How to write portable WebGL</a>
+						</li>
+						<li>
+							<a href="http://codeflow.org/entries/2013/feb/02/why-you-should-use-webgl/">Why use WebGL</a>
+						</li>
+						<li>
+							<a href="http://www.opengl.org/wiki/History_of_OpenGL">History of OpenGL</a>
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1 style="color: #FFF";>Questions?</h1>
+				</section>
+				<section>
+					<h1 style="color: #FFF";>Thank you!</h1>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+				viewDistance : 1,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

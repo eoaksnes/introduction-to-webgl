@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<head>
+		<script src="../../js/three.min.js"></script>
+		<title>Blue Cube</title>
+		<style>
+			body {
+				margin: 0px;
+				overflow: hidden;
+				background-color: black;
+			}
+		</style>
+		<script>
+			function loadScene() {
+				var scene = new THREE.Scene();
+				var fieldOfView = 45;
+				var aspectRatio = window.innerWidth / window.innerHeight;
+				var zNear = 0.1;
+				var zFar = 10000;
+				var camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, zNear, zFar);
+				camera.position.z = 100;
+				var renderer = new THREE.WebGLRenderer({antialias: true});
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				document.body.appendChild(renderer.domElement);
+				var material = new THREE.MeshBasicMaterial({
+				  color: 0x0000FF
+				});
+				var radius = 40; 
+				var tube = 10;
+				var radialSegments = 50; 
+				var tubularSegments = 50;
+				var torus = new THREE.Mesh(new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments), material);
+				scene.add(torus);
+				var axisHelper = new THREE.AxisHelper(20);
+				scene.add(axisHelper);
+
+				function animate(time) {
+			        // Spin the camera in a circle
+			        camera.position.x = Math.sin(time/1000) * 150;
+			        camera.position.y = 0;
+			        camera.position.z = Math.cos(time/1000) * 150;
+			        // You need to update lookAt every frame (0,0,0)
+			        camera.lookAt(scene.position);
+			        renderer.render(scene, camera);
+			        window.requestAnimationFrame(animate);
+		        }
+			    animate(new Date().getTime());
+			}
+		</script>
+	</head>
+	<body onLoad="loadScene();"></body>
+</html>

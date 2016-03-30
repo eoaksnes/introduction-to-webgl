@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<head>
+		<title></title>
+		<style>
+			body {
+				margin: 0px;
+				overflow: hidden;
+				background-color: black;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="../../js/three.min.js"></script>
+		<script src="../../js/Detector.js"></script>
+		<script src="../../js/stats.min.js"></script>	
+		<script src="droid_sans_bold.js"></script>
+	   <script>
+			var scene = new THREE.Scene();
+			scene.fog = new THREE.FogExp2(0x000000, 0.00025);
+			var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 10000);
+			camera.position.y = 150;
+			camera.position.z = 800;
+			var renderer = new THREE.WebGLRenderer({ 
+				antialias: true 
+			});
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			document.body.appendChild(renderer.domElement);
+
+			stats = new Stats();
+			stats.domElement.style.position = "absolute";
+			stats.domElement.style.top = "0px";
+			document.body.appendChild(stats.domElement);
+
+			var textGeometry = new THREE.TextGeometry("3D", {
+				size: 300,
+				height: 10,
+				curveSegments: 10,
+				font: "droid sans",
+				weight: "bold",
+				style: "normal",
+				bevelThickness: 10,
+				bevelSize: 1.5,
+				bevelEnabled: true
+			});
+			
+			var material = new THREE.MeshLambertMaterial({
+				transparent: false
+			});
+			material.color.setHSV(1.0, 1.0, 1.0);
+			
+			var mesh = new THREE.Mesh(textGeometry, material); 
+			mesh.position.set(0, 0, 0);
+			scene.add(mesh);
+
+			var pointLight = new THREE.PointLight(0xFFFFFF);
+			pointLight.position.x = 10;
+			pointLight.position.y = 50;
+			pointLight.position.z = 130;
+			scene.add(pointLight);
+
+			var light = new THREE.AmbientLight(0x404040); 
+			scene.add( light );
+
+			var catTexture = THREE.ImageUtils.loadTexture("../../images/webgl.png");
+			catTexture.anisotropy = renderer.getMaxAnisotropy();
+
+			var materialArray = [];
+			materialArray.push(new THREE.MeshLambertMaterial({ 
+				map: catTexture
+			}));
+			materialArray.push(new THREE.MeshLambertMaterial({ 
+				map: catTexture
+			}));
+			materialArray.push(new THREE.MeshLambertMaterial({ 
+				map: catTexture
+			}));
+			materialArray.push(new THREE.MeshLambertMaterial({ 
+				map: catTexture
+			}));
+			materialArray.push(new THREE.MeshLambertMaterial({ 
+				map: catTexture
+			}));
+			materialArray.push(new THREE.MeshLambertMaterial({ 
+				map: catTexture
+			}));
+			
+
+			var cubeGeometry = new THREE.CubeGeometry(300, 300, 300, 1, 1, 1);
+			var cubeMesh = new THREE.Mesh(cubeGeometry, new THREE.MeshFaceMaterial(materialArray));
+			cubeMesh.position.set(0, 150, -1000);
+			scene.add(cubeMesh);
+
+			var h;
+			function render() { 
+				var time = Date.now() * 0.00005;
+				mesh.rotation.y += 0.01;
+				cubeMesh.rotation.x += 0.01;
+				cubeMesh.rotation.y += 0.01;
+				h = (360 * (1.0 + time ) % 360) / 360;
+				material.color.setHSV(h, 0.75, 0.8);
+				stats.update();
+				renderer.render(scene, camera);
+				requestAnimationFrame(render);
+			}
+			render();
+		</script>
+		<div>
+			<canvas></canvas>
+		</div>
+	</body>
+</html>

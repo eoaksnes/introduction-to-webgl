@@ -1,0 +1,17 @@
+<html>
+ <head>
+  <script>
+    function draw() {
+      var canvas = document.getElementById("myCanvas");
+      if (canvas.getContext) {
+        var drawingContext = canvas.getContext("2d");
+      }
+      drawingContext.fillStyle = "#FF0000";
+      drawingContext.fillRect(50,50,400,400);
+    }
+  </script>
+ </head>
+ <body onload="draw();">
+   <canvas id="myCanvas" width="500" height="500" style="background-color: black;"></canvas>
+ </body>
+</html>

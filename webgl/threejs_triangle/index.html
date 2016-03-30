@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<head>
+		<script src="../../js/three.min.js"></script>
+		<title>Blue Cube</title>
+		<style>
+			body {
+				margin: 0px;
+				overflow: hidden;
+				background-color: black;
+			}
+		</style>
+		<script>
+			function loadScene() {
+				var scene = new THREE.Scene();
+				var fieldOfView = 45;
+				var aspectRatio = window.innerWidth / window.innerHeight;
+				var zNear = 0.1;
+				var zFar = 10000;
+				var camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, zNear, zFar);
+				camera.position.z = 2;
+				var renderer = new THREE.WebGLRenderer({antialias: true, clearColor: 0x0000FF});
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				document.body.appendChild(renderer.domElement);
+				
+				var geometry = new THREE.Geometry();
+				var vertex1 = new THREE.Vector3(-0.5 ,-0.5, 0);
+				var vertex2 = new THREE.Vector3(0.5, -0.5, 0);
+				var vertex3 = new THREE.Vector3(0.0, 0.5, 0);
+				geometry.vertices.push(vertex1);
+				geometry.vertices.push(vertex2);
+				geometry.vertices.push(vertex3);
+				geometry.faces.push(new THREE.Face3(0, 1, 2 ));
+				var material = new THREE.MeshBasicMaterial({
+					color: 0x00FF00
+				});
+				var triangle = new THREE.Mesh(geometry, material);
+				scene.add(triangle);
+				
+				renderer.render( scene, camera );
+			}
+		</script>
+	</head>
+	<body onLoad="loadScene();"></body>
+</html>

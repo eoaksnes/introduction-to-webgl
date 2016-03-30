@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<head>
+    <script src="../../js/three.min.js"></script>
+    <link rel="stylesheet" href="jquery-ui-1.10.2.custom/css/smoothness/jquery-ui-1.10.2.custom.css" />
+    <script src="jquery-ui-1.10.2.custom/js/jquery-1.9.1.js"></script>
+    <script src="jquery-ui-1.10.2.custom/js/jquery-ui-1.10.2.custom.js"></script>
+    <title>Blue Cube</title>
+    <style>
+        body {
+            margin: 0px;
+            overflow: hidden;
+            background-color: black;
+        }
+        #colorPicker {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+        #red, #green, #blue {
+            float: left;
+            clear: left;
+            width: 300px;
+            margin: 15px;
+        }
+        #red .ui-slider-range {
+            background: #ef2929;
+        }
+        #red .ui-slider-handle {
+            border-color: #ef2929;
+        }
+        #green .ui-slider-range {
+            background: #8ae234;
+        }
+        #green .ui-slider-handle {
+            border-color: #8ae234;
+        }
+        #blue .ui-slider-range {
+            background: #729fcf;
+        }
+        #blue .ui-slider-handle {
+            border-color: #729fcf;
+        }
+    </style>
+    <script>
+        var material, rendere, scene, camera;
+
+        function setMaterialColor() {
+            var red = $("#red").slider("value");
+            var green = $("#green").slider("value");
+            var blue = $("#blue").slider("value");
+            material.color.r = red / 255;
+            material.color.g = green / 255;
+            material.color.b = blue / 255;
+        }
+
+        function loadScene() {
+            scene = new THREE.Scene();
+            var fieldOfView = 45;
+            var aspectRatio = window.innerWidth / window.innerHeight;
+            var zNear = 0.1;
+            var zFar = 10000;
+            camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, zNear, zFar);
+            camera.position.z = 150;
+            renderer = new THREE.WebGLRenderer({
+                antialias: true
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+            var radius = 40;
+            var tube = 10;
+            var radialSegments = 50;
+            var tubularSegments = 50;
+            geometry = new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments);
+            material = new THREE.MeshBasicMaterial({
+                color: 0x0000FF
+            });
+            var torus = new THREE.Mesh(geometry, material);
+            scene.add(torus);
+
+            $("#red, #green, #blue").slider({
+                orientation: "horizontal",
+                range: "min",
+                max: 255,
+                value: 127,
+                slide: setMaterialColor,
+                change: setMaterialColor
+            });
+            $("#red").slider("value", 0);
+            $("#green").slider("value", 0);
+            $("#blue").slider("value", 255);
+
+            function animate(time) {
+                // Spin the camera in a circle
+                camera.position.x = Math.sin(time / 1000) * 150;
+                camera.position.y = 0;
+                camera.position.z = Math.cos(time / 1000) * 150;
+                // You need to update lookAt every frame (0,0,0)
+                camera.lookAt(scene.position);
+                renderer.render(scene, camera);
+                window.requestAnimationFrame(animate);
+            }
+            animate(new Date().getTime());
+        }
+    </script>
+</head>
+<body onLoad="loadScene();">
+    <div id="colorPicker">
+        <div id="red"></div>
+        <div id="green"></div>
+        <div id="blue"></div>
+    </div>
+</body>
+
+</html>

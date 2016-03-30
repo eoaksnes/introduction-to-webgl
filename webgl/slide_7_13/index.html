@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<head>
+		<script src="../../js/three.min.js"></script>
+		<title>Blue Cube</title>
+		<style>
+			body {
+				margin: 0px;
+				overflow: hidden;
+				background-color: black;
+			}
+		</style>
+		<script>
+			function loadScene() {
+				var scene = new THREE.Scene();
+				var fieldOfView = 45;
+				var aspectRatio = window.innerWidth / window.innerHeight;
+				var zNear = 0.1;
+				var zFar = 10000;
+				var camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, zNear, zFar);
+				camera.position.z = 550;
+				camera.position.y = 100;
+				var renderer = new THREE.WebGLRenderer({antialias: true});
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				document.body.appendChild(renderer.domElement);
+				
+				var numPoints = 100;
+				spline = new THREE.SplineCurve3([
+				   new THREE.Vector3(0, 0, 0),
+				   new THREE.Vector3(0, 200, 0),
+				   new THREE.Vector3(150, 150, 0),
+				   new THREE.Vector3(150, 50, 0),
+				   new THREE.Vector3(250, 100, 0),
+				   new THREE.Vector3(250, 300, 0)
+				]);
+				var material = new THREE.LineBasicMaterial({
+				    color: 0xff00f0,
+				});
+
+				var geometry = new THREE.Geometry();
+				var splinePoints = spline.getPoints(numPoints);
+
+				for(var i = 0; i < splinePoints.length; i++){
+				    geometry.vertices.push(splinePoints[i]);  
+				}
+
+				var line = new THREE.Line(geometry, material);
+				scene.add(line);
+
+				var light = new THREE.SpotLight();
+      			light.position.set(170, 330, -160);
+      			scene.add(light);
+				
+				var light = new THREE.AmbientLight(0x404040); 
+				scene.add(light);
+
+				renderer.render(scene, camera);
+			}
+		</script>
+	</head>
+	<body onLoad="loadScene();"></body>
+</html>

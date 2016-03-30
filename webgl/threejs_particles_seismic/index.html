@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Particles</title>
+        <script src="../../js/jquery-1.9.0.min.js"></script>
+        <script src="../../js/three.min.js"></script>
+        <style>
+            body {
+                margin: 0px;
+                overflow: hidden;
+                background-color: black;
+            }
+        </style>
+        <script id="vertexshader" type="x-shader/x-vertex">
+			#ifdef GL_ES
+			precision highp float;
+			#endif
+
+			attribute float amplitude;
+			varying float varyingAmplitude;
+
+			void main()	{
+			  varyingAmplitude = amplitude;
+				vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+				gl_PointSize = 3.0 * (300.0 / length(mvPosition.xyz ));
+				gl_Position = projectionMatrix * mvPosition;				
+			}
+		</script>
+
+		<script id="fragmentshader" type="x-shader/x-fragment">
+			#ifdef GL_ES
+			precision highp float;
+			#endif
+
+			uniform float minAmplitude;
+			uniform float maxAmplitude;
+
+			varying float varyingAmplitude;
+
+			void main() {
+				float red = 1.0;
+			  float green = 1.0;
+			  float blue = 1.0;
+				if (varyingAmplitude < 0.0) {
+					green = (varyingAmplitude - minAmplitude) * 1.0 / abs(minAmplitude);
+					blue = (varyingAmplitude - minAmplitude) * 1.0 / abs(minAmplitude);
+				} else {
+					red = (maxAmplitude - varyingAmplitude) * 1.0 / abs(maxAmplitude);
+			    green = (maxAmplitude - varyingAmplitude) * 1.0 / abs(maxAmplitude);
+				}
+			  gl_FragColor = vec4(red, green, blue, 1.0);				
+			}
+		</script>
+		
+        <script>
+            var camera, scene, renderer, particles, material;
+
+			  function loadScene() {
+			    renderer = new THREE.WebGLRenderer({
+			      clearAlpha : 1
+			    });
+			    renderer.setSize(window.innerWidth, window.innerHeight);
+			    document.body.appendChild(renderer.domElement);
+
+			    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+			    scene = new THREE.Scene();
+			    scene.fog = new THREE.FogExp2(0x000000, 0.0001);
+
+			    var statistics;
+			    $.ajax({
+			      async : false,
+			      url : "http://localhost:9000/rdw/api/v1/survey/1702/statistics",
+			    }).done(function(data) {
+			      statistics = JSON.parse(data);
+			    });
+
+			    console.log(statistics);
+
+			    var nrPoints = parseInt(statistics.nrOfInlines) * parseInt(statistics.nrOfCrosslines);
+
+			    var uniforms = {
+			      minAmplitude : {
+			        type : 'f',
+			        value : 1000
+			      },
+			      maxAmplitude : {
+			        type : 'f',
+			        value : 0
+			      }
+			    };
+
+			    var attributes = {
+			      amplitude : {
+			        type : 'f',
+			        value : []
+			      }
+			    };
+
+			    var shaderMaterial = new THREE.ShaderMaterial({
+			      uniforms : uniforms,
+			      attributes : attributes,
+			      vertexShader : document.getElementById('vertexshader').textContent,
+			      fragmentShader : document.getElementById('fragmentshader').textContent
+			    });
+
+			    var geometry = new THREE.Geometry();
+
+			    for ( var i = 0; i < nrPoints; i++) {
+			      var vertex = new THREE.Vector3(0, 0, 0);
+			      geometry.vertices.push(vertex);
+			    }
+
+			    var particles = new THREE.ParticleSystem(geometry, shaderMaterial);
+			    particles.dynamic = true;
+
+			    scene.add(particles);
+
+			    var idx = 0;
+			    var source = new EventSource("http://localhost:9000/rdw/api/v1/survey/1702/timeslice/600?fileType=jsonchunks");
+			    source.addEventListener('error', function(e) {
+			      if (e.readyState == EventSource.CLOSED) {
+			        console.log("error: Connection was closed.");
+			      }
+			      if (e.readyState == EventSource.UNDEFINED) {
+			        source.close();
+			      }
+			    }, false);
+
+			    source.addEventListener('open', function(e) {
+			    }, false);
+
+			    source.addEventListener('message', function(message) {
+			      var data = JSON.parse(message.data);
+			      for ( var i = 0; i < data.points.length; i++) {
+			        var point = data.points[i];
+
+			        var scaleFactor = 0.075;
+
+			        var localX = point.x - statistics.minX;
+			        var localY = point.y - statistics.minY;
+			        var localZ = point.z - statistics.minZ;
+
+			        var x = Math.round(localX * scaleFactor);
+			        var y = Math.round(localY * scaleFactor);
+			        var z = Math.round(localZ * scaleFactor);
+
+			        geometry.vertices[idx] = new THREE.Vector3(x, y, z);
+
+			        var amplitude = parseFloat(point.amplitude);
+
+			        attributes.amplitude.value[idx] = amplitude;
+
+			        if (amplitude < uniforms.minAmplitude.value) {
+			          uniforms.minAmplitude.value = amplitude;
+			        }
+			        if (amplitude > uniforms.maxAmplitude.value) {
+			          uniforms.maxAmplitude.value = amplitude;
+			        }
+
+			        attributes.amplitude.needsUpdate = true;
+			        geometry.verticesNeedUpdate = true;
+			        geometry.colorsNeedUpdate = true;
+
+			        idx++
+			      };
+
+			    }, false);
+
+			    animate();
+
+			  }
+
+			  function animate() {
+			    var time = Date.now();
+			    // Spin the camera in a circle
+			    camera.position.x = Math.sin(time / 1000) * 800;
+			    camera.position.y = 500;
+			    camera.position.z = Math.cos(time / 1000) * 800;
+			    // You need to update lookAt every frame
+			    camera.lookAt(scene.position);
+			    renderer.render(scene, camera);
+			    requestAnimationFrame(animate);
+			  }
+        </script>
+    </head>
+    
+    <body onLoad="loadScene();"></body>
+
+</html>
