@@ -42,33 +42,27 @@
 			<div class="slides">
 				<section>
 <aside class="notes">
-Velkommen til denne introduksjonstalken om WebGL. Me (Thomas og Eirik) og me e konsulenta i Bouvet, som dåkke ser.
+Velkommen...
 
-Grunnen til at me valgte å snakka om WebGL idag er todelt;
-1. me var så heldig å jobbe med ein WebGL applikasjon (og andre kule teknologier) på et prosjekt hos ein kunde og
-2. Da e kult.
+Jeg har hvert så heldig å jobbe med en WebGL på et prosjekt hos en kunde.
 
-Før me fortsette her, så kunne eg tenkt meg å sjå kor mange av dåke som har
-1. Hørt om WebGL
-2. Jobba med WebGL
+Hvor mange har:
+<ul>
+	<li>Hørt om WebGL</li>
+	<li>Jobba med WebGL</li>
+</ul>
 
-- Ok, då håpe eg at dåkke blir (enda meir) trigga te å testa og hacke med WebGL etter denne talken her.
-
-Da eg syns e litt spesielt e at WebGL ikkje er hypa like mykje som mange andre nye teknologier for web, som f.eks. LocalStorage, WebThreads, WebSockets, WebRTC osv. Det kan jo hende at det har noe med at det har blitt forsøkt med 3D på webben omtrent siden den spede begynnelsen. (VRML 1995/1997), uten aldri å ha slått særlig an (trur eg). 3D er jo kult. Eller, det var kult i hvert fall. Og det som ein ofte kjennetegner med 3D og grafikk på webben før WebGL er jo noe sånt som dette:
+Jeg håper at dere blir trigga til å testa og hacke med WebGL etter denne presentasjonen her!
 </aside>
 
 					<img src="images/webgl.png" style="border:0px; size:80%;"/>
 					<h1 style="color: #FFF";>An Introduction</h1>
-					<p style="color: #EEE">24.09.2015</p>
+					<p style="color: #EEE">05.04.2017</p>
 					<p>Eirik Ola Aksnes&nbsp;|&nbsp;Thomas Johansen</p>
 
 				</section>
 
-				<section data-background-iframe="webgl/intro/index.html">
-<aside class="notes">
-No er jo dette WebGL i en browser, men ikkje nåkke meir magisk enn "bevegelig WordArt". Og så tar den opp hele browservinduet.
-</aside>
-				</section>
+				<section data-background-iframe="webgl/intro/index.html"></section>
 
 				<section>
 					<h1>Agenda</h1>
@@ -86,30 +80,22 @@ No er jo dette WebGL i en browser, men ikkje nåkke meir magisk enn "bevegelig W
 
 				<section>
 					<section>
-					<aside class="notes">
-					og det introduserer oss for 3D på webben.
-					</aside>
 						<h1>3D on the Web</h1>
-					</section>
-
-					<section>
-					<aside class="notes">
-					Obligatorisk xkcd
-					</aside>
-						<img src="images/headache.png"/>
 					</section>
 
 					<section>
 
 						<h2>BEFORE (PLUG-INS)</h2>
 						<aside class="notes">
-Tidligere (og litt fortsatt) så finnes det nesten et uttall teknologier som gir oss muligheten til 3D og grafikk i en web browser, MEN
-1. De har alle behov for plug-ins
-2. Integrasjonen med websida er så som så (fra fraværende til delvis mulig).
-
-Ingen av disse har vel slått nok til at de blir værende tilgjengelig så mye lenger (i sin original innpakning). Det er vel dette som er grunnen til at 3D på webben har fått et dårlig rykte. Mye "bells and whistles", men lite sluttprodukt/resultat/utbytte, i hvert fall slik det ofte har blitt brukt.
-
-Det som er litt interessant med et par av teknologiene her (O3D, X3DOM og VRML) er at de er gått over til å bruke WebGL til å rendre 3D grafikken som default.
+Tidligere så finnes det nesten et uttall teknologier som gir oss muligheten til 3D og grafikk i en web browser, men:
+<ul>
+	<li>
+		De har alle behov for plug-ins
+	</li>
+	<li>
+		Integrasjonen med websida er så som så (fra fraværende til delvis mulig)
+	</li>
+</ul>
 						</aside>
 						<ul>
 							<li>Adobe Flash, MS Silverlight</li>
@@ -121,11 +107,7 @@ Det som er litt interessant med et par av teknologiene her (O3D, X3DOM og VRML) 
 
 					<section>
 <aside class="notes">
-Mens det har vært litt kamp på webben om 3D og grafikk, så har (2D/3D APIet OpenGL) OpenGL utvikla seg i det stille siden 1992. Fra å være rigid og fastlåst til å bli mye mer dynamisk, med hovedvekt på programmerbar pipeline (dynamisk prosessering av piksler, med "vertex shader" (posisjonskalkulator) og "fragment shader" (fargevelger) for prosessering av piksler. Dette kommer vi mye nærmere innpå senere i talken. Fra dette så ble det også utviklet en OpenGL ES standard for mobile enheter med mindre maskinkraft/ytelse, et subset av OpenGL. WebGL 1.0 er basert på OpenGL ES 2.0 standarden, og det er den vi skal snakke om i dag.
-
-Det som er også viktig å merke seg er jo at APIen vanligvis (det er en wrapper som også kan brukes for programvareakselrering på CPUen...) interagerer med GPUen for å få maskinvareakselrasjon rendering av 3D (og ikke programvareakselrering som man sier om man bruker CPUen til det samme. Som kjent er GPUen mye mer anvendelig for grafikk og flyttallsoperasjoner enn CPUen.
-
-OpenGL 2.0: Som dere ser tok det lang tid fra versjon 1.0 til neste store versjon 2.0. Hovednyheten var muligheten for programmereren å erstatte den faste og uskiftbare vertex/fragment pipelinen med "shadere".
+WebGL 1.0 er basert på OpenGL ES 2.0 standarden, og det er den vi skal snakke om i dag.
 </aside>
 
 						<h2>OpenGL</h2>
@@ -154,53 +136,31 @@ OpenGL 2.0: Som dere ser tok det lang tid fra versjon 1.0 til neste store versjo
 					<section>
 						<h2>NOW</h2>
 					<aside class="notes">
-Så det som har skjedd er at vi i prinsippet har kombinert OpenGL ES 2.0 med JavaScript og HTML 5 canvas elementet for å få WebGL. Og det er kult.
+Så det som har skjedd er at vi i prinsippet har kombinert OpenGL ES 2.0 med JavaScript og HTML 5 canvas elementet for å få WebGL. Og det er kult!
 
 Men det som hovedsaklig skiller seg ut er jo direkte støtte i nettleseren, med toveis tilgang til JavaScript og DOMen, som en hvilket som helst annen HTML-komponent (del av HTMLen). Og kan derfor manipuleres, - og manipulere HTMLen (DOMen) fra JavaScript.
 						</aside>
 						<div>OpenGL ES 2.0 + JavaScript + HTML5 canvas</div>
 						<div>=</div>
 						<h3>WebGL</h3>
-						<div>(+ data)</div>
 					</section>
 
 					<section>
 					<aside class="notes">
-WebGL krever INGEN plug-ins, det kjører direkte i browseren. Det er lett å komme i gang, ingen installasjoner kreves og man kan skrive koden i VIM og Emacs. JavaScript APIen finnes altså i browseren, og man skriver HTML og JavaScript. WebGL elementet(ene) blir rett og slett en del av websiden, og ikke som en ekstern applikasjon. Den er sømløst integrert/en del av koden, på samme måte som LocalStorage, WebSockets og 2D canvas, som gjør at man kan bruke WebGL der man ser at det er mest logisk å bruke det; isf. f.eks. statisk bilde, vise statistikk eller data visuelt eller at man kanskje trenger ytelsen til GPUen for en gitt type beregninger (WebCL). Ein har direkte tilgang til GPUen (ytelse og lavnivå) som gir oss enorme muligheter, men det finnes også et godt utvalg av høynivå biblioteker for å effektivt bruke teknologien.
-
-Det er selvsagt også noen potensielle ulemper. Med JavaScript så får vi ikke like høy ytelse som vi kunne hatt, f.eks. pga. tid til å parse data og flytte data over på GPUen for prosessering. Ulik Hardware har også tilsvarende effekt, ved at noe som fungerer utmerket på en desktop PC ikke kjører, eller hakker mye en mobiltelefon. Dette er logisk, men kanskje noe man glemmer av mtp. portabiliteten. Sist, så har det også vært litt sikkerhetsbekymringer, men kritikerne (Microsoft og Apple) ser ut til å ha stilnet nå, ettersom de begge har implementert WebGL i sine respektive browsere.
-
-Helt til slutt, hvilke browsere støttes da?
-
-asm.js. Og, når koden er shippa til GPUen så kjører vi jo på nativ hastighet, det er logikken mellom stegene som er javascript-hastighet...javascript er mer eller mindre ikke i stand til å få GPUen til å kjøre 100%, fordi den ikke klarer å sende/prosessere data raskt nok.
-Hva skjer f.eks. om du overgår videominnet? Det er implementasjonsavhengig, og kan variere fra plattform til plattform. På samme måte som at videominnet varierer mye...her handler det selvsagt å kunne teste på mange forksjellige plattformer. Og forressten, du kan IKKE finne ut hvor mye minne du har til rådighet, det er en sikkerhetsissue....så det blir jo krasj da..evnt. at operativsystemet flytter videominne til RAM...som gjør at det blir sirup...
-
-WebGL har extensions fra OpenGL, som gjør at "nye" features kan være tilgjengelig i "gamle" APIer, men dette varierer fra enhet til enhet. Selvom det kan være fristende, eller lett å glemme, bør man passe på å ikke bruke noe som ikke er støttet av en enhet som skal være støttet... Å ha denne muligheten å bruke features før de er spikra i neste versjon kan jo selvsagt også være fint...
-
-Forskjellige plattformer, med forskjellige underliggende APIer (Direct3D) etc. yter forskjellig, spesielt når spennet av hardware skal være såpass stort; PCer til mobiler. Det er i så tilfelle viktig å lage noe som fungerer bra "overalt". Dette har med portabilitet å gjøre...som ofte er en av grunnene til å velge WebGL...
-
-Du kan manipulere DOMen fra WebGL scripts, og du kan interaktivt manipulere grafikken vha. JavaScript.
-
-Det som gjør det så spennende med WebGL er at det blir mulig og mye enklere å lage nye brukergrensesnitt som inntil nå har vært umulig uten eksterne plug-ins og tredjeparts programvare. Skillet mellom desktop-applikasjoner og webapplikasjoner viskes enda mer ut, og man får "gratis" portabilitet mellom mange plattformer man ikke trenger ta hensyn til som utvikler.
+WebGL krever INGEN plug-ins, det kjører direkte i browseren.
+Det er lett å komme i gang, ingen installasjoner kreves og man kan skrive koden i VIM og Emacs.
+WebGL elementet(ene) blir rett og slett en del av websiden, og ikke som en ekstern applikasjon.
+Den er sømløst integrert/en del av koden, på samme måte som LocalStorage og WebSockets.
 					</aside>
 					<h1>YAY!</h1>
 					<ul style="list-style-type:none;">
 						<li class="fragment">+ NO Plugins!</li>
-						<li class="fragment">+ Easy to use</li>
 						<li class="fragment">+ Integrates nicely in website</li>
-						<li class="fragment">+ Two-way interaction</li>
-						<li class="fragment">+ GPU access</li>
-						<li class="fragment">+ Low-level API</li>
-						<li class="fragment">+ High-level Libraries</li>
-						<li class="fragment">+ Browser support</li>
-						<li class="fragment">- Performance limitations (JS)</li>
-						<li class="fragment">- HW limitations</li>
-						<li class="fragment">- Security conserns</li>
 					</ul>
 </section>
 					<section>
 					<aside class="notes">
-					Maaaaange. De aller fleste av de som brukes, dvs 80% av brukermassen på web har hel eller delvis støtte for WebGL 1.0. Det er mao. ingen grunn til å holde tilbake.
+					De aller fleste av de som brukes, dvs 80% av brukermassen på web har hel eller delvis støtte for WebGL 1.0. Det er mao. ingen grunn til å holde tilbake.
 					</aside>
 						<h2>Supported browsers*</h2>
 						<ul style="font-size: 80%">
