@@ -48,11 +48,8 @@ Jeg har hvert så heldig å jobbe med en WebGL på et prosjekt hos en kunde.
 
 Hvor mange har:
 <ul>
-	<li>Hørt om WebGL</li>
-	<li>Jobba med WebGL</li>
+	<li>Jobbet med WebGL?</li>
 </ul>
-
-Jeg håper at dere blir trigga til å testa og hacke med WebGL etter denne presentasjonen her!
 </aside>
 
 					<img src="images/webgl.png" style="border:0px; size:80%;"/>
@@ -130,7 +127,7 @@ WebGL 1.0 er basert på OpenGL ES 2.0 standarden, og det er den vi skal snakke o
 							<li style="color:red">2011 - WebGL 1.0</li>
 							<li>2012 - OpenGL ES 3.0</li>
 							<li>2014 - OpenGL 4.5</li>
-							<li>201? - WebGL 2.0</li>
+							<li>2017 - WebGL 2.0</li>
 						</ul>
 					</section>
 					<section>
@@ -158,7 +155,10 @@ Den er sømløst integrert/en del av koden, på samme måte som LocalStorage og 
 						<li class="fragment">+ Integrates nicely in website</li>
 					</ul>
 </section>
-					<section>
+
+					<section data-background-iframe="http://caniuse.com/#feat=webgl"></section>
+
+					<!--<section>
 					<aside class="notes">
 					De aller fleste av de som brukes, dvs 80% av brukermassen på web har hel eller delvis støtte for WebGL 1.0. Det er mao. ingen grunn til å holde tilbake.
 					</aside>
@@ -179,7 +179,7 @@ Den er sømløst integrert/en del av koden, på samme måte som LocalStorage og 
 							<li>~80% of web users</li>
 						</ul>
 						<p style="font-size: 0.5em; text-align: right;" ><a href="http://caniuse.com/#feat=webgl">*As of 01.09.2015</a></p>
-					</section>
+					</section>-->
 </section>
 				<section>
 					<section>
@@ -813,7 +813,7 @@ function createBuffer(gl) {
 }
 						</code></pre>
 						<aside class="notes">
-							<lu>
+							<ul>
 								<li>
 									Vi må lage oss et buffer som inneholder de tre hjørnepunktene til trekanten.
 								</li>
@@ -1177,7 +1177,7 @@ gl.drawArrays(gl.GL_TRIANGLES, 0, 3);
 									Vi skal ta en titt på ett høyerenivå API nå i neste seksjon
 								</li>
 							</ul>
-						<aside>
+						</aside>
 					</section>
 				</section>
 
@@ -1241,32 +1241,18 @@ gl.drawArrays(gl.GL_TRIANGLES, 0, 3);
 							<li>Camera</li>
 							<li>Renderer</li>
 						</ol>
-						<aside class="notes">
-							<ul>
-								<li>
-									Du trenger tre ting:
-									<ul>
-										<li>
-											En renderer som har som ansvar å tegne en scene.
-										</li>
-										<li>
-											En scene, som inneholder hva man skal tegne.
-										</li>
-										<li>
-											Ett kamera, f.eks perspektiv kamera, som vil tegne ting som er mindre lengre unna.
-										</li>
-									</ul>
-								</li>
-							</ul>
-						</aside>
 					</section>
 
 					<section>
 						<h2>1. Scene</h2>
-						<p>Contains what to draw</p>
+						<p>Contains what to draw.</p>
 						<pre><code class="javascript" contenteditable>
 var scene = new THREE.Scene();
+scene.add(...)
 						</code></pre>
+						<aside class="notes">
+							En scene, som inneholder hva man skal tegne.
+						</aside>
 					</section>
 
 					<section>
@@ -1280,11 +1266,7 @@ var zFar = 10000;
 var camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, zNear, zFar);
 						</code></pre>
 						<aside class="notes">
-							<ul>
-								<li>
-									Ett kamera, f.eks perspektiv kamera, som vil tegne ting som er mindre lengre unna.
-								</li>
-							</ul>
+							Ett kamera, f.eks perspektiv kamera, som vil tegne ting som er mindre lengre unna.
 						</aside>
 					</section>
 
@@ -1296,14 +1278,23 @@ var renderer = new THREE.WebGLRenderer({ clearColor: 0x0000FF });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 						</code></pre>
-						<p>Render the scene with selected camera</p>
+						<p>Render the scene with selected camera and scene</p>
 						<pre><code class="javascript" contenteditable>
 renderer.render(scene, camera);
 						</code></pre>
+						<aside class="notes">
+							En renderer som har som ansvar å tegne en scene.
+						</aside>
 					</section>
 
 					<section>
 						<h2>Now we can start draw things...</h2>
+					</section>
+
+					<section>
+						<h2>Mesh</h2>
+						<img src="images/mesh.png" />
+						<p>A mesh is a complete object that can then be added to a scene.</p>
 					</section>
 
 					<section>
@@ -1317,9 +1308,11 @@ geometry.vertices.push(vertex1);
 geometry.vertices.push(vertex2);
 geometry.vertices.push(vertex3);
 geometry.faces.push(new THREE.Face3(0, 1, 2 ));
+
 var material = new THREE.MeshBasicMaterial({
   color: 0x00FF00
 });
+
 var triangle = new THREE.Mesh(geometry, material);
 scene.add(triangle);
 						</code></pre>
@@ -1357,9 +1350,11 @@ var tube = 10;
 var radialSegments = 50;
 var tubularSegments = 50;
 var geometry = new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments);
+
 var material = new THREE.MeshBasicMaterial({
   color: 0x0000FF
 });
+
 var torus = new THREE.Mesh(geometry, material);
 scene.add(torus);
 						</code></pre>
@@ -1502,18 +1497,18 @@ scene.add(light);
 						<h2>Texture</h2>
 						<p>Load textures</p>
 						<pre><code class="javascript" contenteditable>
-var chromeTexture = THREE.ImageUtils.loadTexture("chrome.png");
-var catTexture = THREE.ImageUtils.loadTexture("cat.jpg");
+var canvasTexture = THREE.ImageUtils.loadTexture("html5canvas.png");
+var webglTexture = THREE.ImageUtils.loadTexture("webgl.png");
 						</code></pre>
 						<p>Apply textures</p>
 						<pre><code class="javascript" contenteditable>
 var materialArray = [];
-materialArray.push(new THREE.MeshLambertMaterial({map: catTexture}));
-materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
-materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
-materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
-materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
-materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
+materialArray.push(new THREE.MeshLambertMaterial({map: webglTexture}));
+materialArray.push(new THREE.MeshLambertMaterial({map: webglTexture}));
+materialArray.push(new THREE.MeshLambertMaterial({map: webglTexture}));
+materialArray.push(new THREE.MeshLambertMaterial({map: canvasTexture}));
+materialArray.push(new THREE.MeshLambertMaterial({map: canvasTexture}));
+materialArray.push(new THREE.MeshLambertMaterial({map: canvasTexture}));
 var cubeGeometry = new THREE.CubeGeometry(50, 50, 50, 1, 1, 1);
 var cubeMesh = new THREE.Mesh(cubeGeometry, new THREE.MeshFaceMaterial(materialArray));
 scene.add(cubeMesh);
@@ -1578,18 +1573,22 @@ function changeColorParticles(time) {
 					<section>
 						<iframe data-src="http://apps.playcanvas.com/will/doom3/gangnamstyle" width="800" height="600"></iframe>
 					</section>
+
+					<section>
+						<iframe data-src="http://www.babylonjs.com/Demos/Distraction/distraction.html" width="800" height="600"></iframe>
+					</section>
 				</section>
 
 				<section>
 					<h2>
 						WebGL Beginner's Guide
 					</h2>
-					<img src="images/webgl_beginners_guide.jpg"">
+					<img src="images/webgl_beginners_guide.jpg">
 				</section>
 
 				<section>
 					<h2>Udacity - Online 3d graphics course!</h2>
-					<img src="images/udacity.png" width="896" height="504"></img>
+					<img src="images/udacity.png" width="896" height="504" />
 				</section>
 
 				<section>
@@ -1618,6 +1617,9 @@ function changeColorParticles(time) {
 						</li>
 						<li>
 							<a href="http://www.opengl.org/wiki/History_of_OpenGL">History of OpenGL</a>
+						</li>
+						<li>
+							<a href="https://humaan.com/blog/web-3d-graphics-using-three-js/">An introduction to Three.js</a>
 						</li>
 					</ul>
 				</section>

@@ -23,16 +23,16 @@
 				renderer.setSize(window.innerWidth, window.innerHeight);
 				document.body.appendChild(renderer.domElement);
 				
-				var chromeTexture = THREE.ImageUtils.loadTexture("../../images/chrome.png");
-				var catTexture = THREE.ImageUtils.loadTexture("../../images/cat1.jpg");
+				var canvasTexture = THREE.ImageUtils.loadTexture("../../images/html5canvas.png");
+				var webglTexture = THREE.ImageUtils.loadTexture("../../images/webgl-logo.png");
 				
 				var materialArray = [];
-				materialArray.push(new THREE.MeshLambertMaterial({map: catTexture}));
-				materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
-				materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
-				materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
-				materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
-				materialArray.push(new THREE.MeshLambertMaterial({map: chromeTexture}));
+				materialArray.push(new THREE.MeshLambertMaterial({map: webglTexture}));
+				materialArray.push(new THREE.MeshLambertMaterial({map: webglTexture}));
+				materialArray.push(new THREE.MeshLambertMaterial({map: webglTexture}));
+				materialArray.push(new THREE.MeshLambertMaterial({map: canvasTexture}));
+				materialArray.push(new THREE.MeshLambertMaterial({map: canvasTexture}));
+				materialArray.push(new THREE.MeshLambertMaterial({map: canvasTexture}));
 				var cubeGeometry = new THREE.CubeGeometry(50, 50, 50, 1, 1, 1);
 				var cubeMesh = new THREE.Mesh(cubeGeometry, new THREE.MeshFaceMaterial(materialArray));
 				scene.add(cubeMesh);
