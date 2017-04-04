@@ -41,22 +41,16 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
-<aside class="notes">
-Velkommen...
-
-Jeg har hvert så heldig å jobbe med en WebGL på et prosjekt hos en kunde.
-
-Hvor mange har:
-<ul>
-	<li>Jobbet med WebGL?</li>
-</ul>
-</aside>
-
 					<img src="images/webgl.png" style="border:0px; size:80%;"/>
 					<h1 style="color: #FFF";>An Introduction</h1>
 					<p style="color: #EEE">05.04.2017</p>
 					<p>Eirik Ola Aksnes&nbsp;|&nbsp;Thomas Johansen</p>
-
+					<aside class="notes">
+						<ul>
+							<li>Jeg har hvert så heldig å jobbe med en WebGL på et prosjekt hos en kunde.</li>
+							<li>Hvor mange har jobbet med WebGL?</li>
+						</ul>
+					</aside>
 				</section>
 
 				<section data-background-iframe="webgl/intro/index.html"></section>
@@ -67,7 +61,6 @@ Hvor mange har:
 						<li>3D on the Web</li>
 						<li>Hello Canvas (2D)</li>
 						<li>Hello WebGL (3D)</li>
-						<li>WebGL Basics</li>
 						<li>Draw Something Meaningful</li>
 						<li>Three.js to the rescue!</li>
 						<li>Great Examples</li>
@@ -81,32 +74,28 @@ Hvor mange har:
 					</section>
 
 					<section>
-
 						<h2>BEFORE (PLUG-INS)</h2>
-						<aside class="notes">
-Tidligere så finnes det nesten et uttall teknologier som gir oss muligheten til 3D og grafikk i en web browser, men:
-<ul>
-	<li>
-		De har alle behov for plug-ins
-	</li>
-	<li>
-		Integrasjonen med websida er så som så (fra fraværende til delvis mulig)
-	</li>
-</ul>
-						</aside>
 						<ul>
 							<li>Adobe Flash, MS Silverlight</li>
 							<li>Java OpenGL, JOGL, Java 3D</li>
 							<li>O3D</li>
 							<li>VRML, X3D/X3DOM</li>
 						</ul>
+						<aside class="notes">
+							Tidligere så finnes det nesten et uttall teknologier som gir oss muligheten til 3D og
+							grafikk i en web browser, men:
+							<ul>
+								<li>
+									De har alle behov for plug-ins
+								</li>
+								<li>
+									Integrasjonen med websida er så som så, alt fra fraværende til delvis mulig
+								</li>
+							</ul>
+						</aside>
 					</section>
 
 					<section>
-<aside class="notes">
-WebGL 1.0 er basert på OpenGL ES 2.0 standarden, og det er den vi skal snakke om i dag.
-</aside>
-
 						<h2>OpenGL</h2>
 						<ul style="font-size: 80%">
 							<li>1992 - OpenGL 1.0</li>
@@ -130,69 +119,45 @@ WebGL 1.0 er basert på OpenGL ES 2.0 standarden, og det er den vi skal snakke o
 							<li>2017 - WebGL 2.0</li>
 						</ul>
 					</section>
+
 					<section>
 						<h2>NOW</h2>
-					<aside class="notes">
-Så det som har skjedd er at vi i prinsippet har kombinert OpenGL ES 2.0 med JavaScript og HTML 5 canvas elementet for å få WebGL. Og det er kult!
-
-Men det som hovedsaklig skiller seg ut er jo direkte støtte i nettleseren, med toveis tilgang til JavaScript og DOMen, som en hvilket som helst annen HTML-komponent (del av HTMLen). Og kan derfor manipuleres, - og manipulere HTMLen (DOMen) fra JavaScript.
-						</aside>
 						<div>OpenGL ES 2.0 + JavaScript + HTML5 canvas</div>
 						<div>=</div>
 						<h3>WebGL</h3>
 					</section>
 
 					<section>
-					<aside class="notes">
-WebGL krever INGEN plug-ins, det kjører direkte i browseren.
-Det er lett å komme i gang, ingen installasjoner kreves og man kan skrive koden i VIM og Emacs.
-WebGL elementet(ene) blir rett og slett en del av websiden, og ikke som en ekstern applikasjon.
-Den er sømløst integrert/en del av koden, på samme måte som LocalStorage og WebSockets.
-					</aside>
-					<h1>YAY!</h1>
-					<ul style="list-style-type:none;">
-						<li class="fragment">+ NO Plugins!</li>
-						<li class="fragment">+ Integrates nicely in website</li>
-					</ul>
-</section>
+						<h1>YAY!</h1>
+						<ul style="list-style-type:none;">
+							<li class="fragment">+ NO Plugins!</li>
+							<li class="fragment">+ Integrates nicely in website</li>
+						</ul>
+						<aside class="notes">
+							<ul>
+								<li>
+									WebGL krever ingen plugins
+								</li>
+								<li>
+									WebGL elementet(ene) blir rett og slett en del av websiden, og ikke som en ekstern
+									applikasjon.
+								</li>
+							</ul>
+						</aside>
+					</section>
 
 					<section data-background-iframe="http://caniuse.com/#feat=webgl"></section>
+				</section>
 
-					<!--<section>
-					<aside class="notes">
-					De aller fleste av de som brukes, dvs 80% av brukermassen på web har hel eller delvis støtte for WebGL 1.0. Det er mao. ingen grunn til å holde tilbake.
-					</aside>
-						<h2>Supported browsers*</h2>
-						<ul style="font-size: 80%">
-							<li>Desktop - Opera > 12</li>
-							<li>Desktop - Chrome > 9</li>
-							<li>Desktop - Firefox > 4</li>
-							<li>Desktop - Safari > 5.1</li>
-							<li>Desktop - Internet Explorer >= 11 (Partially)</li>
-							<li>Desktop - Edge</li>
-							<li>Mobile - Firefox > 4</li>
-							<li>Mobile - Chrome > 25</li>
-							<li>Mobile - Opera > 12</li>
-							<li>Mobile - iOS > 8</li>
-							<li>Mobile - IE > 8.1</li>
-							<li>Mobile Others : Maemo, Sailfish, Tizen, Ubuntu Touch, WebOS...</li>
-							<li>~80% of web users</li>
-						</ul>
-						<p style="font-size: 0.5em; text-align: right;" ><a href="http://caniuse.com/#feat=webgl">*As of 01.09.2015</a></p>
-					</section>-->
-</section>
 				<section>
 					<section>
-					<aside class="notes">
-Då e det tid for hands-on. Først ut så ser vi på Canvas-elementet.
-					</aside>
 						<h1>Hello Canvas (2D)</h1>
+						<aside class="notes">
+							Da er det på tide å se på litt kode. Først ut så ser vi på Canvas elementet.
+						</aside>
 					</section>
 
 					<section>
-						<aside class="notes">
-						Dette elementet har eksistert i lang tid (2004/2005) og benyttes til å manipulere/rendre en bitmap. Dvs. hele canvasen består av piksler som vi kan endre på. Her er lerretet uten noen form for behandling, men med sort bakgrunn.
-						</aside>
 						<h2>1. Create a canvas element</h2>
 						<pre><code contenteditable>
 &lt;canvas id="myCanvas" width="400" height="400" style="background-color: black;"&gt;
@@ -205,9 +170,6 @@ Då e det tid for hands-on. Først ut så ser vi på Canvas-elementet.
 					</section>
 
 					<section>
-						<aside class="notes">
-						For å manipulere/endre på lerreret må vi først hente konteksten/handleren for 2D manipulering.
-						</aside>
 						<h2>2. Obtain a drawing context</h2>
 						<p>
 						<pre><code contenteditable>
@@ -215,12 +177,12 @@ var canvas = document.getElementById("myCanvas");
 var drawingContext = canvas.getContext("2d");
 						</code></pre>
 						</p>
+						<aside class="notes">
+							For å manipulere/endre på lerreret må vi først hente konteksten for 2D manipulering.
+						</aside>
 					</section>
 
 					<section>
-					<aside class="notes">
-							Som i Java og mange andre språk så kan vi bruke primitive instruksjoner som flytt, tegnlinje, velge malerkost for å tegne i ett "koordinatsystem".
-						</aside>
 						<h2>3. Draw something</h2>
 
 						<pre><code class="javascript">
@@ -239,13 +201,12 @@ drawingContext.fill();
 drawingContext.stroke();
 drawingContext.closePath();
 						</code></pre>
-
+						<aside class="notes">
+							Som i Java og mange andre språk så kan vi bruke primitive instruksjoner som flytt, tegnlinje, velge malerkost for å tegne i ett "koordinatsystem".
+						</aside>
 					</section>
 
 					<section>
-						<aside class="notes">
-Resultatet blir f.eks. dette. Og så over til en ekstra dimensjon.
-						</aside>
 						<h2>3. The result</h2>
 						<div>
 							<canvas id="myRectangle" width="500" height="500" style="background-color: black;text-align:center">
@@ -338,58 +299,7 @@ Resultatet blir f.eks. dette. Og så over til en ekstra dimensjon.
 					</section>
 
 					<section>
-						<h2>1. Create a canvas element</h2>
-						<pre><code contenteditable>
-&lt;html&gt;
-  &lt;head&gt;          
-    &lt;script type="text/javascript"&gt;
-      function draw() {
-        ...
-      }
-    &lt;/script&gt;
-  &lt;/head&gt;
-  &lt;body onload="draw()"&gt;
-    &lt;canvas id="canvas" width="500" height="500"&gt;&lt;/canvas&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-						</code></pre>
-					</section>
-
-					<section>
-						<h2>2. Obtain a WebGL context</h2>
-						<pre><code contenteditable>
-&lt;html&gt;
-  &lt;head&gt;          
-    &lt;script type="text/javascript"&gt;
-      function draw() {
-        var canvas = document.getElementById('canvas');
-        var gl = canvas.getContext("webgl");
-        ...
-      }
-    &lt;/script&gt;
-  &lt;/head&gt;
-  &lt;body onload="draw()"&gt;
-    &lt;canvas id="canvas" width="500" height="500"&gt;&lt;/canvas&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-						</code></pre>
-						<ul>
-							<li>
-								Get a reference to the canvas element
-							</li>
-							<li>
-								Obtain a WebGL context
-								<ul>
-									<li>
-										Through <i>gl</i> (JavaScript object) we can access all WebGL functionality
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</section>
-
-					<section>
-						<h2>3. Set background color</h2>
+						<h2>The Code!</h2>
 						<pre><code contenteditable>
 &lt;html&gt;
   &lt;head&gt;          
@@ -407,6 +317,25 @@ Resultatet blir f.eks. dette. Og så over til en ekstra dimensjon.
   &lt;/body&gt;
 &lt;/html&gt;
 						</code></pre>
+						<ul>
+							<li>
+								Create a canvas element
+							</li>
+							<li>
+								Get a reference to the canvas element
+							</li>
+							<li>
+								Obtain a WebGL context <!--(the context name can vary from browser to browser)-->
+							</li>
+								<ul>
+									<li>
+										Through <i>gl</i> (JavaScript object) we can access all WebGL functionality
+									</li>
+								</ul>
+							<li>
+								Set background color to blue
+							</li>
+						</ul>
 						<aside class="notes">
 							<ul>
 								<li>
@@ -426,23 +355,34 @@ Resultatet blir f.eks. dette. Og så over til en ekstra dimensjon.
 							</ul>
 						</aside>
 					</section>
-
-					<!--<section>
-						<h2>WebGL Is A State Machine</h2>
-						<ul>
-							<li>
-								 Commands are permanent and will continue to take effect until they are overridden
-							</li>
-							<li>
-								Therefore it will maintain the selected color to clear the canvas up to when this color is changed using the WebGL function gl.clearColor
-							</li>
-						</ul>
-					</section>-->
 				</section>
+
 
 				<section>
 					<section>
-						<h2>WebGL Basics</h2>
+						<h1>Draw Something Meaningful</h1>
+						<aside class="notes">
+							<ul>
+								<li>
+									<li>
+										I denne seksjone skal vi se på ett litt mer meningsfylt eksempel, vi skal tegne en trekant
+									</li>
+									<li>
+										Det er fortsatt et enkelt eksempel, men som vi skal se, så kreves det litt arbeid for å faktisk kunne tegne en trekant
+									</li>
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>Draw A Triangle</h2>
+						<iframe data-src="webgl/webgl_triangle/index.html" width="400" height="400"></iframe>
+						<ul>
+							<li>
+								Reusing the code from the previous example (blue background)
+							</li>
+						</ul>
 					</section>
 
 					<section>
@@ -451,7 +391,7 @@ Resultatet blir f.eks. dette. Og så over til en ekstra dimensjon.
 						</h2>
 						<ul>
 							<li>
-								WebGL is designed
+								WebGL is designed;
 								<ul>
 									<li>
 										To work directly with your GPU
@@ -480,245 +420,6 @@ Resultatet blir f.eks. dette. Og så over til en ekstra dimensjon.
 								</li>
 							</ul>
 						</aside>
-					</section>
-
-					<section>
-						<h2>
-							Already know WebGL?
-						</h2>
-						<ul>
-							<li>
-								If you know OpenGL, you may already know WebGL
-								<ul>
-									<li>
-										WebGL is quite different from OpenGL <= 3.0 and OpenGL ES 1.x
-									</li>
-								</ul>
-							</li>
-						</ul>
-						<aside class="notes">
-							<ul>
-								<li>
-									Eldre OpenGL funksjonalitet er droppet i WebGL:
-									<ul>
-										<li>Ting som ikke er effektivt</li>
-										<li>Man må bruke shadere</li>
-										<li>Removes seldom-used or legacy features</li>
-									</ul>
-								</li>
-							</ul>
-						</aside>
-					</section>
-
-					<section>
-						<h2>We have to use shaders</h2>
-						<ul>
-							<li>
-								OpenGL ES 1.0 uses a fixed function pipeline
-								<ul>
-									<li>
-										Built-in functions to set lights, fog, colors, vertices, cameras, and more
-									</li>
-									<li>
-										Easy to use
-									</li>
-								</ul>
-							</li>
-							<li>
-								OpenGL ES 2.0 (and WebGL) uses a programmable pipeline
-								<ul>
-									<li>
-										Built-in functions are removed and replaced by programmable shaders
-									</li>
-								</ul>
-							</li>
-						</ul>
-						<aside class="notes">
-							<ul>
-								<li>
-									Jeg har tenkt å si noen få ord om forskjellen mellom en "fixed function" og programmerbar pipeline
-								</li>
-								<li>
-									I den "fixed function pipeline" har du ferdige funksjoner for å aktivere lys, tåke, kamera
-								</li>
-							</ul>
-						</aside>
-					</section>
-
-					<section>
-						<h2>
-							Graphical Pipeline
-						</h2>
-						<p>
-							<img class="blackBackground" src="images/webgl-workflow-2_2.png">
-						</p>
-						<aside class="notes">
-						</aside>
-					</section>
-
-					<section>
-						<h2>
-							Programmable pipeline
-						</h2>
-						<p>
-							<img class="blackBackground" src="images/webgl-workflow-3_3.png">
-						</p>
-						<aside class="notes">
-							<ul>
-								<li>
-									I WebGL er pipelinen programmerbar, gjennom noe som kalles shadere.
-								</li>
-								<li>
-									Så hva er en shader?
-								</li>
-							</ul>
-						</aside>
-					</section>
-
-					<section>
-						<h2>What Are Shaders?</h2>
-						<ul>
-							<li>Small "programs" that runs on the GPU <!--(with a high degree of parallelism)--></li>
-							<!--<li>A programmable replacement for parts of the ﬁxed function pipeline</li>-->
-							<li>Have a well-defined set of input/output values, some built-in and some user-defined</li>
-							<li>Written in OpenGL Shading Language (GLSL)</li>
-							<li>GLSL syntax is kinda like C</li>
-							<li>Generally regarded as fairly advanced, but it is actually much simpler than it looks</li>
-						</ul>
-						<aside class="notes">
-							<ul>
-								<li>
-									For de som er kjent med Nvidia CUDA kan shaders sammenlignes med Kernels,
-									men forskjellen er at Shaders har et veldefinert sett av input og output verdier,
-									siden de er en del av en pipeline
-								</li>
-							</ul>
-						</aside>
-					</section>
-
-					<section>
-						<h2>
-							Shader Effect Examples
-						</h2>
-						<p>
-							<iframe data-src="http://www.dasprinzip.com/pExamples/raymarcher03.htm" width="400" height="400"></iframe>
-							<iframe data-src="http://www.dasprinzip.com/pExamples/raymarcher01.htm" width="400" height="400"></iframe>
-						</p>
-						<ul>
-							<li>
-								Shaders can be used to create cool effects like lightning, shadowing, refraction, and more
-							</li>
-						</ul>
-						<p>
-							<a class="reference" href="http://www.dasprinzip.com/prinzipiell/2011/02/21/raymarching/">Reference</a>
-						</p>
-						<aside class="notes">
-							<li>
-								Med shadere kan implementere egne metoder/algoritmer for å oppnå ønskede effekter (lys, skyggelegging, refleksjoner)
-							</li>
-							<!--<li>
-								Man kan lage effekter som ville vært svært vanskelig å få til ved hjelp av en "fixed function pipeline"
-							</li>-->
-							<li>
-								I disse to eksemplene er det samme datagrunnlag, men vet å anvende forskjellige shader, så får man forskjellige effekter!
-							</li>
-							<!--<li>
-								Alt av kalkuleringer blir kjørt på GPUen
-							</li>-->
-						</aside>
-					</section>
-
-					<section>
-						<h2>Shaders In WebGL</h2>
-						<ul>
-							<!--<li>Much of the pipeline, like the fixed pipeline, is outside your control</li>-->
-							<li>There are two shader types (two stages of the pipeline are programmable):
-								<ul>
-									<li>
-										A vertex shader (process vertices)
-									</li>
-									<li>
-										A fragment shader (process fragments/pixels)
-									</li>
-								</ul>
-							</li>
-							<li>You will need both shaders in order to draw anything on the screen</li>
-							<li>For standard usage these shaders are quite simple</li>
-							<li>No default shaders</li>
-	  						<li>You need to write your own shaders or use one provided by a WebGL library (copy and paste)</li>
-						</ul>
-						<aside class="notes">
-
-						</aside>
-					</section>
-
-					<!--<section>
-						<h2>
-							We have to use Vertex Buffer Objects (VBOs)
-						</h2>
-						<ul>
-							<li>No immediate mode rendering (you cannot use glBegin and glEnd)
-								<pre><code contenteditable class="java">
-glBegin(GL_TRIANGLES);
-  glVertex2f(0.0f, 1.0f);
-  glVertex2f(0.87f, -0.5f);
-  glVertex2f(-0.87f, -0.5f);
-glEnd();
-								</code></pre>
-							</li>
-							<li>Instead must use Vertex Buffer Objects (VBOs) and
-								<ul>
-									<li>Better performance</li>
-								</ul>
-							</li>
-						</ul>
-					</section>
-
-					<section>
-						<h2>
-							Differences To Other OpenGL Versions
-						</h2>
-						<ul>
-							<li>No built-in matrix functions:
-								<ul>
-									<li>
-										glLoadIdentity(), glTranslatef(), glRotatef(), glScalef(), glMultMatrixf(), glFrustum() and glOrtho().
-									</li>
-								</ul>
-							</li>
-							<li>Instead you must have your own matrix implementations and the matrix data to shaders</li>
-						</ul>
-					</section>-->
-
-				</section>
-
-				<section>
-					<section>
-						<h1>Draw Something Meaningful</h1>
-						<aside class="notes">
-							<ul>
-								<li>
-									<li>
-										I denne seksjone skal vi se på ett litt mer meningsfylt eksempel, vi skal tegne en trekant
-									</li>
-									<li>
-										Det er fortsatt et enkelt eksempel, men som vi skal se, så kreves det litt arbeid for å faktisk kunne tegne en trekant
-									</li>
-								</li>
-							</ul>
-						</aside>
-					</section>
-
-					<section>
-						<h2>Draw A Triangle</h2>
-
-						<iframe data-src="webgl/webgl_triangle/index.html" width="400" height="400"></iframe>
-
-						<ul>
-							<li>
-								Reusing the code from the previous example (blue background)
-							</li>
-						</ul>
 					</section>
 
 					<section>
@@ -753,6 +454,139 @@ glEnd();
 							</ul>
 						</aside>
 					</section>
+
+
+					<section>
+						<h2>
+							Graphical Pipeline
+						</h2>
+						<p>
+							<img class="blackBackground" src="images/webgl-workflow-2_2.png">
+						</p>
+						<aside class="notes">
+						</aside>
+					</section>
+
+					<section>
+						<h2>
+							Programmable pipeline
+						</h2>
+						<p>
+							<img class="blackBackground" src="images/webgl-workflow-3_3.png">
+						</p>
+						<aside class="notes">
+							<ul>
+								<li>
+									I WebGL er pipelinen programmerbar, gjennom noe som kalles shadere.
+								</li>
+								<li>
+									Så hva er en shader?
+								</li>
+							</ul>
+						</aside>
+					</section>
+
+					<section>
+						<h2>What Are Shaders?</h2>
+						<ul>
+							<li>Small "programs" that runs on the GPU</li>
+							<li>Have a well-defined set of input/output values, some built-in and some user-defined</li>
+							<li>Written in OpenGL Shading Language (GLSL)</li>
+							<li>GLSL syntax is kinda like C</li>
+							<li>Generally regarded as fairly advanced, but it is actually much simpler than it looks</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>
+							Shader Effect Examples
+						</h2>
+						<p>
+							<iframe data-src="http://www.dasprinzip.com/pExamples/raymarcher03.htm" width="400" height="400"></iframe>
+							<iframe data-src="http://www.dasprinzip.com/pExamples/raymarcher01.htm" width="400" height="400"></iframe>
+						</p>
+						<ul>
+							<li>
+								Shaders can be used to create cool effects like lightning, shadowing, refraction, and more
+							</li>
+						</ul>
+						<p>
+							<a class="reference" href="http://www.dasprinzip.com/prinzipiell/2011/02/21/raymarching/">Reference</a>
+						</p>
+						<aside class="notes">
+							<li>
+								Med shadere kan implementere egne metoder/algoritmer for å oppnå ønskede effekter (lys, skyggelegging, refleksjoner)
+							</li>
+							<!--<li>
+								Man kan lage effekter som ville vært svært vanskelig å få til ved hjelp av en "fixed function pipeline"
+							</li>-->
+							<li>
+								I disse to eksemplene er det samme datagrunnlag, men vet å anvende forskjellige shader, så får man forskjellige effekter!
+							</li>
+						</aside>
+					</section>
+
+					<section>
+						<h2>Shaders In WebGL</h2>
+						<ul>
+							<li>There are two shader types (two stages of the pipeline are programmable):
+								<ul>
+									<li>
+										A vertex shader (process vertices)
+									</li>
+									<li>
+										A fragment shader (process fragments/pixels)
+									</li>
+								</ul>
+							</li>
+							<li>You will need both shaders in order to draw anything on the screen</li>
+							<li>For standard usage, these shaders are quite simple</li>
+							<li>No default shaders</li>
+	  						<li>You need to write your own shaders or use one provided by a WebGL library (copy and paste)</li>
+						</ul>
+						<aside class="notes">
+
+						</aside>
+					</section>
+
+					<!--<section>
+						<h2>
+							We have to use Vertex Buffer Objects (VBOs)
+						</h2>
+						<ul>
+							<li>No immediate mode rendering (you cannot use glBegin and glEnd)
+								<pre><code contenteditable class="java">
+glBegin(GL_TRIANGLES);
+  glVertex2f(0.0f, 1.0f);
+  glVertex2f(0.87f, -0.5f);
+  glVertex2f(-0.87f, -0.5f);
+glEnd();
+								</code></pre>
+							</li>
+							<li>Instead must use Vertex Buffer Objects (VBOs) and
+								<ul>
+									<li>Better performance</li>
+								</ul>
+							</li>
+						</ul>
+					</section>-->
+
+					<!--
+					<section>
+						<h2>
+							Differences To Other OpenGL Versions
+						</h2>
+						<ul>
+							<li>No built-in matrix functions:
+								<ul>
+									<li>
+										glLoadIdentity(), glTranslatef(), glRotatef(), glScalef(), glMultMatrixf(), glFrustum() and glOrtho().
+									</li>
+								</ul>
+							</li>
+							<li>Instead you must have your own matrix implementations and the matrix data to shaders</li>
+						</ul>
+					</section>-->
 
 					<section>
 						<h2>Simplified WebGL Pipeline</h2>
@@ -849,13 +683,6 @@ function createBuffer(gl) {
 							</ul>
 						</aside>
 					</section>
-
-					<!--<section>
-						<h2>
-							Buffer data Is Input To Vertex Shaders
-						</h2>
-						<img src="images/webglProgrammingModel.png">
-					</section>-->
 
 					<!--<section>
 						<h2>
@@ -1044,7 +871,7 @@ function createShaderProgram(vertexShader, fragmentShader) {
 								Attributes is input to vertex shader (not fragment shader)
 							</li>
 							<li>
-								Each vertex normally has a set of attributes associated with it
+								Each vertex normally has a set of attributes associated with it;
 								<ul>
 									<li>
 										Position
@@ -1057,7 +884,7 @@ function createShaderProgram(vertexShader, fragmentShader) {
 									</li>
 								</ul>
 							</li>
-						<ul>
+						</ul>
 						<pre><code contenteditable>
 function vertexShaderAttributes(gl, shaderProgram, vertexPositionBuffer) {
   // Make the vertices available to the vertex shaders
@@ -1108,7 +935,10 @@ gl.drawArrays(gl.GL_TRIANGLES, 0, 3);
 						<h2>
 							The Result
 						</h2>
-						<iframe data-src="webgl/webgl_triangle/index.html" width="350" height="350"></iframe>
+						<iframe data-src="webgl/webgl_triangle/index.html" width="400" height="400"></iframe>
+						<aside class="notes">
+
+						</aside>
 					</section>
 
 					<!--<section>
@@ -1141,7 +971,7 @@ gl.drawArrays(gl.GL_TRIANGLES, 0, 3);
 								A lot of work (low level API)
 							</li>
 							<li>
-								Any WebGL program will have similar structure
+								Any WebGL program will have similar structure;
 								<ul>
 									<li>
 										Obtain a WebGL context from the canvas element
@@ -1236,27 +1066,18 @@ gl.drawArrays(gl.GL_TRIANGLES, 0, 3);
 
 					<section>
 						<h2>Need three things</h2>
-						<ol>
-							<li>Scene</li>
-							<li>Camera</li>
-							<li>Renderer</li>
-						</ol>
-					</section>
-
-					<section>
-						<h2>1. Scene</h2>
-						<p>Contains what to draw.</p>
+						<p>Renderer (responsible to draw the scene)  </p>
+						<pre><code class="javascript" contenteditable>
+var renderer = new THREE.WebGLRenderer({
+  clearColor: 0x0000FF
+});
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+						</code></pre>
+						<p>Scene (contains what to draw)</p>
 						<pre><code class="javascript" contenteditable>
 var scene = new THREE.Scene();
-scene.add(...)
 						</code></pre>
-						<aside class="notes">
-							En scene, som inneholder hva man skal tegne.
-						</aside>
-					</section>
-
-					<section>
-						<h2>2. Camera</h2>
 						<p>Perspective camera</p>
 						<pre><code class="javascript" contenteditable>
 var fieldOfView = 45;
@@ -1266,24 +1087,22 @@ var zFar = 10000;
 var camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, zNear, zFar);
 						</code></pre>
 						<aside class="notes">
-							Ett kamera, f.eks perspektiv kamera, som vil tegne ting som er mindre lengre unna.
-						</aside>
-					</section>
-
-					<section>
-						<h2>3. Renderer</h2>
-						<p>Create</p>
-						<pre><code class="javascript" contenteditable>
-var renderer = new THREE.WebGLRenderer({ clearColor: 0x0000FF });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-						</code></pre>
-						<p>Render the scene with selected camera and scene</p>
-						<pre><code class="javascript" contenteditable>
-renderer.render(scene, camera);
-						</code></pre>
-						<aside class="notes">
-							En renderer som har som ansvar å tegne en scene.
+						<ul>
+							<li>
+								Du trenger 3 ting:
+								<ul>
+									<li>
+										En renderer som har som ansvar å tegne en scene. 0x0000FF == Blå bakgrunnsfarge
+									</li>
+									<li>
+										En scene, som inneholder hva man skal tegne.
+									</li>
+									<li>
+										Ett kamera, f.eks perspektiv kamera, som vil tegne ting som er mindre lengre unna.
+									</li>
+								</ul>
+							</li>
+						</ul>
 						</aside>
 					</section>
 
@@ -1331,9 +1150,6 @@ scene.add(triangle);
 								<li>
 									 0x00FF00 == Grønn trekant
 								</li>
-								<!--<li>
-									Mesh: Posisjon, rotasjon, skalering
-								</li>-->
 							</ul>
 						</aside>
 					</section>
@@ -1465,7 +1281,9 @@ function setMaterialColor() {
                         </code></pre>
 					</section>
 
-					<section data-background-iframe="webgl/threejs_cube/index.html"></section>
+					<section>
+						<iframe data-src="webgl/threejs_cube/index.html" width="800" height="600"></iframe>
+					</section>
 
 					<section>
 						<h2>Lightning</h2>
@@ -1647,10 +1465,6 @@ function changeColorParticles(time) {
 				progress: true,
 				history: true,
 				center: true,
-				viewDistance : 1,
-
-				transition: 'slide', // none/fade/slide/convex/concave/zoom
-
 				// Optional reveal.js plugins
 				dependencies: [
 					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
