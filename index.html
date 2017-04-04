@@ -83,11 +83,9 @@
                     <li>VRML, X3D/X3DOM</li>
                 </ul>
                 <aside class="notes">
-                    Tidligere så finnes det nesten et uttall teknologier som gir oss muligheten til 3D og
-                    grafikk i en web browser, men:
                     <ul>
                         <li>
-                            De har alle behov for plug-ins
+                            Alle har behov for plug-ins
                         </li>
                         <li>
                             Integrasjonen med websida er så som så, alt fra fraværende til delvis mulig
@@ -370,8 +368,7 @@ drawingContext.closePath();
                 <aside class="notes">
                     <ul>
                         <li>
-                        <li>
-                            I denne seksjone skal vi se på ett litt mer meningsfylt eksempel, vi skal tegne en trekant
+                            I denne seksjonen skal vi se på ett litt mer meningsfylt eksempel, vi skal tegne en trekant!
                         </li>
                         <li>
                             Det er fortsatt et enkelt eksempel, men som vi skal se, så kreves det litt arbeid for å
@@ -398,7 +395,7 @@ drawingContext.closePath();
                 </h2>
                 <ul>
                     <li>
-                        WebGL is designed;
+                        WebGL is designed
                         <ul>
                             <li>
                                 To work directly with your GPU
@@ -414,18 +411,18 @@ drawingContext.closePath();
                         <li>
                             Siden WebGL er et lav nivå API;
                             <ul>
-                                <li>Så må man gjøre mye selv</li>
+                                <li>Man gjøre mye selv</li>
                                 <li>Man får forholdsvis lite hjelp av WebGL APIet</li>
                                 <li>F.eks så har man ikke en funksjon som heter "tegn trekant"</li>
                             </ul>
                         </li>
                         <li>
-                            Vi har desverre ikke tid til å gå inpå alle detaljene
+                            Jeg har desverre ikke tid til å gå inpå alle detaljene
                             <!--rundt 3D grafikk og WebGL i denne seksjonen-->, men håper gi nok informasjon til at dere
                             får en slags ide om hvordan WebGL fungerer
                         </li>
                         <li>
-                            Det blir litt teori først nå, før vi vil vise noe kode
+                            Det blir litt teori først nå, før jeg vil vise noe kode
                         </li>
                     </ul>
                 </aside>
@@ -447,11 +444,9 @@ drawingContext.closePath();
                     </li>
                 </ul>
                 <aside class="notes">
+                    Det man gjør er å:
                     <ul>
-                        <li>
-                            Det man gjør er å:
-                        <li>
-                            Lage en list over hjørnepunktene til trekanten
+                            Lage en list over hjørnepunktene til trekanten (også kalt en vertex)
                         </li>
                         <li>
                             Disse hjørnepunktene blir så matet til GPUen
@@ -701,21 +696,6 @@ function createBuffer(gl) {
                 </aside>
             </section>
 
-            <!--<section>
-                <h2>
-                    Attributes
-                </h2>
-                <ul>
-                    <li>
-                        The input buffer data is represented as attributes inside the vertex shader
-                    </li>
-                    <li>
-                        Due to the fact that the vertex shader is called on each vertex, the attributes will be different every time
-                    </li>
-                </ul>
-                <img src="images/vertexShaderInputAttributes.png">
-            </section>-->
-
             <section>
                 <h2>A Simple Vertex Shader</h2>
                 <ul>
@@ -750,10 +730,10 @@ function createBuffer(gl) {
                             Dette er en veldig enkel vertex shader som har i oppgave å posisjonere ut hjørnepunktene
                         </li>
                         <li>
-                            Den tar bare verdiene direkte ifra bufferet og sett det som endelig posisjon
+                            Denne vertex shaderen tar bare verdiene direkte ifra bufferet og setter det som endelig posisjon
                         </li>
                         <li>
-                            gl_Position - Bygd inn variabel
+                            gl_Position er en innebygd variabel
                         </li>
                         <!--<li>
                             Ingen prosessering skjer her, det vil si, alle hjørnepuntene får de samme verdiene som de verdiene som er lagret i bufferet
@@ -770,22 +750,6 @@ function createBuffer(gl) {
                             The main purpose of the Vertex shader is to compute the screen coordinate of a vertex (where this vertex will be displayed on screen)
                         </li>
                     </ul>-->
-                    <p>Vertex shaders typically:</p>
-                    <ul>
-                        </li>
-                        Rotate, translate and scale each vertex of the 3D model to place it correctly relative to the
-                        virtual camera (which is always at the origin).
-                        </li>
-                        <li>
-                            Perform perspective calculations.
-                        </li>
-                        <li>
-                            Perform some of the lighting math.
-                        </li>
-                        <li>
-                            Handle complex animation tasks.
-                        </li>
-                    </ul>
                 </aside>
             </section>
 
@@ -798,9 +762,6 @@ function createBuffer(gl) {
                     <li>
                         The GPU figures out which pixels on the screen that are covered by the triangle
                     </li>
-                    <!--<li>
-                        Tweak your colors that appear on the screen just the way you like it
-                    </li>-->
                     <li>
                         Its job is to set something called gl_FragColor, the final colour of a pixel
                     </li>
@@ -823,11 +784,6 @@ function createBuffer(gl) {
                             hjørnepuntene til trekanten
                         </li>
                     </ul>
-                    <!--<ul>
-                        <li>
-                            Executed a dozen to tens of thousands of times, depending on the canvas size
-                        </li>
-                    </ul>-->
                     <p>
                         Fragment shaders typically:
                     </p>
@@ -889,7 +845,7 @@ function createShaderProgram(gl, vertexShader, fragmentShader) {
                 <h2>Vertex Shader Attributes</h2>
                 <ul>
                     <li>
-                        Attributes is input to vertex shader (not fragment shader)
+                        Attributes is input to the vertex shader
                     </li>
                     <li>
                         Each vertex normally has a set of attributes associated with it;
@@ -932,24 +888,21 @@ function vertexShaderAttributes(gl, shaderProgram, vertexPositionBuffer) {
 gl.drawArrays(gl.GL_TRIANGLES, 0, 3);
 						</code></pre>
                 <ul>
-                    <!--<li>
+                    <li>
                         Draw a triangle using GL_TRIANGLES primitive, it treats each triplet of vertices as an independent triangle.
                     </li>
                     <li>
-                        Primitive is important parameter since it determines how many fragments will be generated
-                    </li>-->
+                        Primitive is important parameter since it determines how many triangles will be generated
+                    </li>
                 </ul>
-                <!--<p>
+                <p>
                     <img src="images/gl-primitives.png">
-                </p>-->
+                </p>
                 <aside class="notes">
                     <ul>
                         <li>
                             Vi har nå alt som trengs for å tegne vår trekant
                         </li>
-                        <!--<li>
-                            Number of triangles = number vertices/3
-                        </li>-->
                     </ul>
                 </aside>
             </section>
@@ -978,18 +931,6 @@ gl.drawArrays(gl.GL_TRIANGLES, 0, 3);
 
             <section>
                 <h2>The bottom line</h2>
-                <!--<pre><code class="javascript" contenteditable>
-var canvas = document.getElementById('webglCanvas');
-var gl = canvas.getContext("webgl");
-var vertexPositionBuffer = createBuffer(gl);
-var vertexShader = createShader(gl, document.getElementById("vertex").innerHTML, gl.VERTEX_SHADER);
-var fragmentShader = createShader(gl, document.getElementById("fragment").innerHTML, gl.FRAGMENT_SHADER);
-var shaderProgram = createShaderProgram(gl, vertexShader, fragmentShader);
-vertexShaderAttributes(gl, shaderProgram, vertexPositionBuffer)
-gl.clearColor(0, 0, 0.5, 1);
-gl.clear(gl.COLOR_BUFFER_BIT);
-gl.drawArrays(gl.GL_TRIANGLES, 0, 3);
-                </code></pre>-->
                 <ul>
                     <li>
                         A lot of work (low level API)
